@@ -24,6 +24,8 @@
 #define ROCK_C fmt::rgb(143, 143, 143)
 #define COAL_C fmt::rgb(31, 31, 31)
 
+#define COLOR1 fmt::rgb(134, 194, 62)
+
 // Enums
 
 enum class MapView {
