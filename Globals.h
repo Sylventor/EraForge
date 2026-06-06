@@ -69,4 +69,15 @@ enum class BuildingType {
     Military
 };
 
+enum class CitystateType {
+    Science,
+    Economic,
+    Military
+};
+
+// Constants
+
+constexpr int MAP_SIZE_X = 30;
+constexpr int MAP_SIZE_Y = 30;
+
 #endif //UNTITLED_COLORS_H

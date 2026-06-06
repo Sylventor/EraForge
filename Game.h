@@ -5,8 +5,36 @@
 #ifndef UNTITLED_GAME_H
 #define UNTITLED_GAME_H
 
+#include "Globals.h"
+
+class Civilization{};
+class Tile{};
+class Citystate{};
 
 class Game {
+private:
+    Civilization* player;
+    Tile* map[MAP_SIZE_Y][MAP_SIZE_X];
+    MapView mapView;
+    int selectedTileX;
+    int selectedTileY;
+public:
+    Civilization* const getPlayer();
+    Tile* const getTile(int x, int y);
+    Tile* const getMap(int x, int y);
+    MapView* const getMapView();
+    int const getSelectedTileX();
+    int const getSelectedTileY();
+    Tile* const getSelectedTile();
+
+    void printMap();
+    void startGame();
+    void playerTurn();
+    void aiTurn();
+    void declareWar(Citystate* citystate);
+    void showMainMenu();
+    void buildCity(int x, int y);
+    void moveSelect(int x, int y);
 };
 
 
