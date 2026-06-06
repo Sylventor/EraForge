@@ -7,9 +7,9 @@
 
 #include "Globals.h"
 
-class Civilization{};
-class Tile{};
-class Citystate{};
+class Civilization;
+class Tile;
+class Citystate;
 
 class Game {
 private:

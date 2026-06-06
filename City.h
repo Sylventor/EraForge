@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-class Civilization{};
-class Tile{};
+class Civilization;
+class Tile;
 
 class City {
 private:

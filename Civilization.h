@@ -9,9 +9,9 @@
 
 #include "Globals.h"
 
-class City{};
-class Unit{};
-class Building{};
+class City;
+class Unit;
+class Building;
 
 class Civilization {
 private:
@@ -20,8 +20,8 @@ private:
     std::map<Resource, int> resources;
     std::vector<City*> cities;
     std::vector<Unit*> units;
-    std::vector<Building> researchedBuildings;
-    std::vector<Unit> researchedUnits;
+    std::vector<Building*> researchedBuildings;
+    std::vector<Unit*> researchedUnits;
 public:
     Civilization();
 
@@ -30,11 +30,11 @@ public:
     std::map<Resource, int> const getResources();
     std::vector<City*> const getCities();
     std::vector<Unit*> const getUnits();
-    std::vector<Building> const getResearchedBuildings();
-    std::vector<Unit> const getResearchedUnits();
+    std::vector<Building*> const getResearchedBuildings();
+    std::vector<Unit*> const getResearchedUnits();
 
-    bool researchBuilding(Building building, int cost);
-    bool researchUnit(Unit unit, int cost);
+    bool researchBuilding(Building* building, int cost);
+    bool researchUnit(Unit* unit, int cost);
 
     void addGold(int amount);
     void addScience(int amount);

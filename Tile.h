@@ -6,10 +6,10 @@
 #define UNTITLED_TILE_H
 #include "Globals.h"
 
-class Building{};
-class Unit{};
-class City{};
-class Citystate{};
+class Building;
+class Unit;
+class City;
+class Citystate;
 
 class Tile {
 private:

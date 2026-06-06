@@ -9,7 +9,7 @@
 
 #include "Globals.h"
 
-class Unit{};
+class Unit;
 
 class Citystate {
 private:

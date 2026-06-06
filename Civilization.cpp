@@ -21,14 +21,14 @@ std::vector<City*> const Civilization::getCities() {
 std::vector<Unit*> const Civilization::getUnits() {
     return this->units;
 }
-std::vector<Building> const Civilization::getResearchedBuildings() {
+std::vector<Building*> const Civilization::getResearchedBuildings() {
     return this->researchedBuildings;
 }
-std::vector<Unit> const Civilization::getResearchedUnits() {
+std::vector<Unit*> const Civilization::getResearchedUnits() {
     return this->researchedUnits;
 }
 
-bool Civilization::researchBuilding(Building building, int cost) {
+bool Civilization::researchBuilding(Building* building, int cost) {
     if (this->science < cost) {
         return false;
     }
@@ -36,7 +36,7 @@ bool Civilization::researchBuilding(Building building, int cost) {
     this->science -= cost;
     return true;
 }
-bool Civilization::researchUnit(Unit unit, int cost) {
+bool Civilization::researchUnit(Unit* unit, int cost) {
     if (this->science < cost) {
         return false;
     }
