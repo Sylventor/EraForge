@@ -7,8 +7,8 @@
 #include <map>
 #include <string>
 
-#include "Game.h"
 #include "Globals.h"
+#include "Game.h"
 
 class Building;
 class Civilization;
@@ -47,7 +47,7 @@ public:
     std::map<Resource, int> const getRequiredResources();
     Building* const getRequiredBuilding();
 
-    void move(int x, int y);
+    void move(int x, int y, Game* game);
     void attack(int x, int y, Game* game);
     void upgrade();
     void takeDamage(int hp);

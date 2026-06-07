@@ -4,7 +4,6 @@
 
 #include "Unit.h"
 
-#include "Game.h"
 #include "Tile.h"
 
 
@@ -65,7 +64,26 @@ Building* const Unit::getRequiredBuilding() {
     return requiredBuilding;
 }
 
-void Unit::move(int x, int y) {
+void Unit::move(int x, int y, Game* game) {
+    int distance =
+        std::abs(x - this->x) +
+        std::abs(y - this->y);
+
+    if (distance != 1)
+        return;
+
+    Tile* tile = game->getTile(x, y);
+
+    if (!tile)
+        return;
+
+    int movementCost = tile->getMovementCost(this->type);
+    if (movementCost < 0)
+        return;
+    if (this->movement < movementCost)
+        return;
+
+    this->movement -= movementCost;
     this->x = x;
     this->y = y;
 }
