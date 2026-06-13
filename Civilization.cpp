@@ -3,6 +3,9 @@
 //
 
 #include "Civilization.h"
+#include "City.h"
+#include "Unit.h"
+
 
 // TODO: Сделать конструктор
 

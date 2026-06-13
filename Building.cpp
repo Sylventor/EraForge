@@ -5,7 +5,7 @@
 #include "Building.h"
 
 
-Building::Building(std::string name, char icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus,
+Building::Building(std::string name, std::string icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus,
                    int scienceBonus, int resourceBonus, int cost, Resource requiredResource,
                    std::vector<TerrainType> requiredTerrain) {
     this->name = name;
@@ -13,6 +13,7 @@ Building::Building(std::string name, char icon, BuildingType type, int foodBonus
     this->type = type;
     this->foodBonus = foodBonus;
     this->goldBonus = goldBonus;
+    this->scienceBonus = scienceBonus;
     this->populationBonus = populationBonus;
     this->resourceBonus = resourceBonus;
     this->cost = cost;
@@ -23,7 +24,7 @@ Building::Building(std::string name, char icon, BuildingType type, int foodBonus
 std::string const Building::getName() {
     return name;
 }
-char const Building::getIcon() {
+std::string const Building::getIcon() {
     return icon;
 }
 BuildingType const Building::getType() {
@@ -38,6 +39,9 @@ int const Building::getGoldBonus() {
 int const Building::getPopulationBonus() {
     return populationBonus;
 }
+int const Building::getScienceBonus() {
+    return scienceBonus;
+}
 int const Building::getResourceBonus() {
     return resourceBonus;
 }
@@ -46,6 +50,9 @@ Resource const Building::getRequiredResource() {
 }
 std::vector<TerrainType> const Building::getRequiredTerrain() {
     return requiredTerrain;
+}
+int const Building::getCost() {
+    return cost;
 }
 
 

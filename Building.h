@@ -13,7 +13,7 @@
 class Building {
 private:
     std::string name;
-    char icon;
+    std::string icon;
     BuildingType type;
     int foodBonus;
     int goldBonus;
@@ -24,10 +24,10 @@ private:
     Resource requiredResource;
     std::vector<TerrainType> requiredTerrain;
 public:
-    Building(std::string name, char icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus, int scienceBonus, int resourceBonus, int cost, Resource requiredResource, std::vector<TerrainType> requiredTerrain);
+    Building(std::string name, std::string icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus, int scienceBonus, int resourceBonus, int cost, Resource requiredResource, std::vector<TerrainType> requiredTerrain);
 
     std::string const getName();
-    char const getIcon();
+    std::string const getIcon();
     BuildingType const getType();
     int const getFoodBonus();
     int const getGoldBonus();

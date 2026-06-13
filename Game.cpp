@@ -3,3 +3,7 @@
 //
 
 #include "Game.h"
+
+Tile* const Game::getTile(int x, int y) {
+    return this->map[x][y];
+}

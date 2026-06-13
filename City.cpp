@@ -85,5 +85,6 @@ void City::upgrade() {
         this->populationForUpgrade += 5;
         this->maxHealth *= 1.5;
         this->health = this->maxHealth;
+    // TODO: Добавить расширение теретории при повышении уровня
     }
 }

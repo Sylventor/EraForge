@@ -2,7 +2,14 @@
 // Created by Nikita on 28.05.2026.
 //
 
+#include <fmt/core.h>
+#include <fmt/format.h>
+#include <fmt/color.h>
+
 #include "Tile.h"
+#include "Building.h"
+#include "Citystate.h"
+#include "Unit.h"
 
 // --------------CONSTRUCTOR---------------
 
@@ -83,7 +90,7 @@ int Tile::getMovementCost(UnitType unitType) {
     if (this->unit != nullptr) {
         return -1; // Returns -1 if tile has unit
     }
-    if (this->building.getBuildingType() == BuildingType::City) {
+    if (this->building->getType() == BuildingType::City) {
         return -2; // Returns -2 if tile has city
     }
     if (this->citystateOwner != nullptr && this->citystateOwner->getIsInWar()) {
@@ -198,9 +205,76 @@ int Tile::getMovementCost(UnitType unitType) {
                     return 1;
             }
     }
+    return -5; // Returns -5 if other returns didn't work
 }
 
-// TODO: Сделать метод printTile()
-void Tile::printTile(MapView *mapView) {
+void Tile::printTile(MapView mapView) {
+    fmt::rgb bg_color;
+    fmt::rgb fg_color1;
+    fmt::rgb fg_color2;
+    std::string terrain_icon;
+    std::string icon;
 
+    if (mapView == MapView::Terrain) {
+        bg_color = terrain_bg.at(this->terrain);
+        fg_color1 = terrain_fg.at(this->terrain);
+        fg_color2 = resource_fg.at(this->resource);
+        terrain_icon = terrain_icons.at(this->terrain);
+        icon = resource_icons.at(this->resource);
+    }
+    else if (mapView == MapView::Units) {
+        bg_color = terrain_bg.at(this->terrain);
+        fg_color1 = terrain_fg.at(this->terrain);
+        fg_color2 = COLOR2;
+        terrain_icon = terrain_icons.at(this->terrain);
+        if (unit) {
+            icon = unit_icons.at(this->unit->getType());
+        } else if (building) {
+            icon = building->getIcon();
+        } else {
+            icon = U' ';
+        }
+    }
+    else if (mapView == MapView::Politic) {
+        if (citystateOwner) {
+            bg_color = citystateOwner->getColor();
+        } else if (owner) {
+            bg_color = COLOR1;
+        } else {
+            bg_color = terrain_bg.at(this->terrain);
+        }
+        fg_color1 = COLOR2;
+        fg_color2 = COLOR2;
+        terrain_icon = U' ';
+
+        if (unit) {
+            icon = unit_icons.at(this->unit->getType());
+        } else if (building) {
+            icon = building->getIcon();
+        } else {
+            icon = U' ';
+        }
+    }
+    else if (mapView == MapView::Base) {
+        bg_color = terrain_bg.at(this->terrain);
+        fg_color1 = terrain_fg.at(this->terrain);
+        terrain_icon = terrain_icons.at(this->terrain);
+        if (unit) {
+            icon = unit_icons.at(this->unit->getType());
+            fg_color2 = COLOR2;
+        } else if (building) {
+            icon = building->getIcon();
+            fg_color2 = COLOR2;
+        } else if (resource != Resource::Nothing) {
+            icon = resource_icons.at(this->resource);
+            fg_color2 = resource_fg.at(this->resource);
+        } else {
+            icon = terrain_icon;
+            fg_color2 = fg_color1;
+        }
+    }
+
+    fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
+    fmt::print(bg(bg_color) | fg(fg_color2), "{}", icon);
+    fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
 }
