@@ -35,6 +35,9 @@
 #define COLOR2 fmt::rgb(255, 255, 255)
 #define COLOR3 fmt::rgb(0, 0, 0)
 
+#define NOT_REVEALED_C1 fmt::rgb(50, 50, 50)
+#define NOT_REVEALED_C2 fmt::rgb(80, 80, 80)
+
 // Enums
 
 enum class MapView {
@@ -144,7 +147,7 @@ const std::map<Resource, fmt::rgb> resource_fg = {
 
 // Constants
 
-constexpr int MAP_SIZE_X = 30;
-constexpr int MAP_SIZE_Y = 30;
+constexpr int MAP_SIZE_X = 50;
+constexpr int MAP_SIZE_Y = 50;
 
 #endif //UNTITLED_COLORS_H

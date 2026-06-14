@@ -19,20 +19,24 @@ private:
     int selectedTileX;
     int selectedTileY;
 public:
+    Game();
+
     Civilization* const getPlayer();
     Tile* const getTile(int x, int y);
-    Tile* const getMap(int x, int y);
-    MapView* const getMapView();
+    MapView const getMapView();
     int const getSelectedTileX();
     int const getSelectedTileY();
     Tile* const getSelectedTile();
 
+
     void printMap();
+    void generateMap();
     void startGame();
     void playerTurn();
     void aiTurn();
     void declareWar(Citystate* citystate);
     void showMainMenu();
+    void printControls();
     void buildCity(int x, int y);
     void moveSelect(int x, int y);
 };

@@ -274,7 +274,11 @@ void Tile::printTile(MapView mapView) {
         }
     }
 
-    fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
-    fmt::print(bg(bg_color) | fg(fg_color2), "{}", icon);
-    fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
+    if (this->revealed) {
+        fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
+        fmt::print(bg(bg_color) | fg(fg_color2), "{}", icon);
+        fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
+    } else {
+        fmt::print(bg(NOT_REVEALED_C1) | fg(NOT_REVEALED_C2), "###");
+    }
 }
