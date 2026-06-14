@@ -35,6 +35,9 @@
 #define COLOR2 fmt::rgb(255, 255, 255)
 #define COLOR3 fmt::rgb(0, 0, 0)
 
+#define COLOR_GOLD fmt::rgb(242, 195, 24)
+#define COLOR_SCIENCE fmt::rgb(96, 171, 224)
+
 #define NOT_REVEALED_C1 fmt::rgb(50, 50, 50)
 #define NOT_REVEALED_C2 fmt::rgb(80, 80, 80)
 
@@ -135,6 +138,14 @@ const std::map<Resource, std::string> resource_icons = {
     {Resource::Horses, "♞"},
     {Resource::Coal, "●"},
     {Resource::Rocks, "■"},
+};
+
+const std::map<Resource, std::string> resource_names = {
+    {Resource::Nothing, " "},
+    {Resource::Iron, "Iron"},
+    {Resource::Horses, "Horses"},
+    {Resource::Coal, "Coal"},
+    {Resource::Rocks, "Rocks"},
 };
 
 const std::map<Resource, fmt::rgb> resource_fg = {

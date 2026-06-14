@@ -16,5 +16,4 @@ int main() {
 
     Game* game = new Game();
     game->showMainMenu();
-    game->printMap();
 }

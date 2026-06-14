@@ -30,6 +30,7 @@ public:
 
 
     void printMap();
+    void printStats();
     void generateMap();
     void startGame();
     void playerTurn();

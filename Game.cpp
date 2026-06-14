@@ -10,9 +10,21 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "Game.h"
+
+#include "Civilization.h"
 #include "Tile.h"
+
+static void clearScreen() {
+#if defined(_WIN32) || defined(_WIN64)
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
+}
 
 static bool inBounds(int x, int y) {
     return x >= 0 && x < MAP_SIZE_X && y >= 0 && y < MAP_SIZE_Y;
@@ -312,7 +324,7 @@ void Game::generateMap()
 void Game::showMainMenu() {
     int choise;
     do {
-        std::cout << "\x1B[2J\x1B[H";
+        clearScreen();
         fmt::print(fg(COLOR1), R"(
  ██████████                     ███████████
 ░░███░░░░░█                    ░░███░░░░░░█
@@ -333,7 +345,57 @@ void Game::showMainMenu() {
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 > )");
         std::cin >> choise;
-    } while (choise < 0 || choise > 2);
+        if (std::cin.fail()) {
+            fmt::print(fg(COLOR1), "Ошибка: введите число!\n");
 
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            choise = -1;
+        }
+        else if (choise < 0 || choise > 2)
+        {
+            fmt::print(fg(COLOR1), "Ошибка: введите 0-2\n");
+            choise = -1;
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    } while (choise == -1);
+    switch (choise) {
+        case 0:
+            exit(0);
+            break;
+        case 1:
+            this->startGame();
+            break;
+        case 2:
+            this->printControls();
+            break;
+        default:
+            break;
+    }
+}
+
+void Game::startGame() {
+    this->generateMap();
+    this->playerTurn();
+}
+
+void Game::printStats() {
+    fmt::print(fg(COLOR_GOLD), "o Gold: ");
+    fmt::print(fg(COLOR_SCIENCE), "Δ Science: \n");
+    for (const auto& pair : this->player->getResources())
+    {
+        Resource key = pair.first;
+        int value = pair.second;
+
+        fmt::print(fg(resource_fg.at(key)), "{} {}: {}", resource_icons.at(key), resource_names.at(key), value);
+    }
+}
+
+void Game::printControls() {}
+
+void Game::playerTurn() {
+    clearScreen();
+    printStats();
+    this->printMap();
 }
 
