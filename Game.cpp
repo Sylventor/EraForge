@@ -380,14 +380,14 @@ void Game::startGame() {
 }
 
 void Game::printStats() {
-    fmt::print(fg(COLOR_GOLD), "o Gold: ");
-    fmt::print(fg(COLOR_SCIENCE), "Δ Science: \n");
+    fmt::print(fg(COLOR_GOLD) | bg(COLOR4),"o Gold: ");
+    fmt::print(fg(COLOR_SCIENCE) | bg(COLOR4), "Δ Science: \n");
     for (const auto& pair : this->player->getResources())
     {
         Resource key = pair.first;
         int value = pair.second;
 
-        fmt::print(fg(resource_fg.at(key)), "{} {}: {}", resource_icons.at(key), resource_names.at(key), value);
+        fmt::print(fg(resource_fg.at(key)) | bg(COLOR4), "{} {}: {}", resource_icons.at(key), resource_names.at(key), value);
     }
 }
 

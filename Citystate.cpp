@@ -4,6 +4,21 @@
 
 #include "Citystate.h"
 
+Citystate::Citystate(std::string name, CitystateType type, std::vector<Unit*> units, int gold, int goldGain, int science, int scienceGain, int x, int y, int health, int maxHealth) {
+    this->name = name;
+    this->type = type;
+    this->units = units;
+    this->gold = gold;
+    this->goldGain = goldGain;
+    this->science = science;
+    this->scienceGain = scienceGain;
+    this->x = x;
+    this->y = y;
+    this->health = health;
+    this->maxHealth = maxHealth;
+    this->isInWar = false;
+}
+
 std::string const Citystate::getName() {
     return name;
 }

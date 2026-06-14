@@ -23,7 +23,7 @@ private:
     std::vector<Building*> researchedBuildings;
     std::vector<Unit*> researchedUnits;
 public:
-    Civilization();
+    Civilization(int startGold, int startScience, City* startCity);
 
     int const getGold();
     int const getScience();

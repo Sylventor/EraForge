@@ -28,7 +28,7 @@ private:
     bool isInWar;
     fmt::rgb color;
 public:
-    Citystate(std::string name, CitystateType type, std::vector<Unit*> units, int gold, int goldGain, int science, int scienceGain, int x, int y, int health, int maxHealth, bool isInWar);
+    Citystate(std::string name, CitystateType type, std::vector<Unit*> units, int gold, int goldGain, int science, int scienceGain, int x, int y, int health, int maxHealth);
 
     std::string const getName();
     CitystateType const getType();
