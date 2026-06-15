@@ -28,6 +28,7 @@ add_executable(EraForge main.cpp
         Tile.h
         Building.cpp
         Building.h
-        Globals.h)
+        Globals.h
+        Types.h)
 
 target_link_libraries(EraForge PRIVATE fmt::fmt)

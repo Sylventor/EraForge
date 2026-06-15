@@ -4,6 +4,8 @@
 
 #ifndef UNTITLED_TILE_H
 #define UNTITLED_TILE_H
+
+#include "Types.h"
 #include "Globals.h"
 
 class Building;

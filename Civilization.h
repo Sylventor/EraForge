@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 
-#include "Globals.h"
+#include "Types.h"
 
 class City;
 class Unit;

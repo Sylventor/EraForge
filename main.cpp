@@ -4,8 +4,7 @@
 #include <fmt/color.h>
 
 #include "Game.h"
-#include "Globals.h"
-#include "Tile.h"
+
 
 
 int main() {

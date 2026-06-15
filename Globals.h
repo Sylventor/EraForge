@@ -7,12 +7,12 @@
 
 #include <map>
 #include <vector>
-#include <windows.h>
 #include <fmt/color.h>
 
 #include "Building.h"
 #include "Unit.h"
 #include "Citystate.h"
+
 // Colors
 
 #define PLAINS_C fmt::rgb(134, 194, 62)
@@ -44,56 +44,6 @@
 
 #define NOT_REVEALED_C1 fmt::rgb(50, 50, 50)
 #define NOT_REVEALED_C2 fmt::rgb(80, 80, 80)
-
-// Enums
-
-enum class MapView {
-    Terrain,
-    Politic,
-    Units,
-    Base
-};
-
-enum class Resource {
-    Nothing,
-    Iron,
-    Horses,
-    Rocks,
-    Coal
-};
-
-enum class TerrainType {
-    Plains,
-    Mountains,
-    Rivers,
-    Forest,
-    Desert,
-    Shallow,
-    Ocean
-};
-
-enum class UnitType {
-    Melee,
-    Ranged,
-    Cavalry,
-    AntiCavalry,
-    Siege,
-    Naval
-};
-
-enum class BuildingType {
-    City,
-    Science,
-    Economy,
-    Production,
-    Military
-};
-
-enum class CitystateType {
-    Science,
-    Economic,
-    Military
-};
 
 // Maps
 
@@ -159,11 +109,6 @@ const std::map<Resource, fmt::rgb> resource_fg = {
     {Resource::Coal, COAL_C},
     {Resource::Rocks, ROCKS_C}
 };
-
-// Constants
-
-constexpr int MAP_SIZE_X = 50;
-constexpr int MAP_SIZE_Y = 50;
 
 // Objects
 

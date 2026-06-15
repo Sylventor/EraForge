@@ -7,9 +7,9 @@
 #include <map>
 #include <string>
 
-#include "Globals.h"
-#include "Game.h"
+#include "Types.h"
 
+class Game;
 class Building;
 class Civilization;
 

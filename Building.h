@@ -7,8 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "Globals.h"
-
+#include "Types.h"
 
 class Building {
 private:

@@ -6,9 +6,9 @@
 #define UNTITLED_CITYSTATE_H
 #include <string>
 #include <vector>
+#include <fmt/color.h>
 
-#include "Globals.h"
-#include "fmt/color.h"
+#include "Types.h"
 
 class Unit;
 

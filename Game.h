@@ -5,7 +5,8 @@
 #ifndef UNTITLED_GAME_H
 #define UNTITLED_GAME_H
 
-#include "Globals.h"
+#include "Types.h"
+
 
 class Civilization;
 class Tile;

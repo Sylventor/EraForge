@@ -376,7 +376,9 @@ void Game::showMainMenu() {
 
 void Game::startGame() {
     this->generateMap();
-    this->playerTurn();
+    while (true) {
+        this->playerTurn();
+    }
 }
 
 void Game::printStats() {
