@@ -7,8 +7,26 @@
 #include "Building.h"
 #include "Tile.h"
 #include "Civilization.h"
+#include "Game.h"
 
-City::City(Civilization* owner, int x, int y, std::string name) {}
+City::City(Game* game, Civilization* owner, int x, int y, std::string name) {
+    this->owner = owner;
+    this->x = x;
+    this->y = y;
+    this->name = name;
+    int population = 3;
+    int populationForUpgrade = 6;
+    int food = 3;
+    int maxHealth = 300;
+    int health = maxHealth;
+    for (int nx = -2; nx <= 2; nx++) {
+        for (int ny = -2; ny <= 2; ny++) {
+            Tile* t = game->getTile(x+nx, y+ny);
+            ownedTiles.push_back(t);
+            t->setOwner(this);
+        }
+    }
+}
 
 std::vector<Tile*> const City::getOwnedTiles() {
     return ownedTiles;
@@ -53,7 +71,7 @@ void City::repair(int health) {
 }
 
 void City::update() {
-    int newFood = 0;
+    int newFood = 3;
     int newPopulation = 0;
     double bonus = 1;
 
@@ -83,7 +101,7 @@ void City::update() {
 void City::upgrade() {
     if (this->population >= this->populationForUpgrade) {
         this->populationForUpgrade += 5;
-        this->maxHealth *= 1.5;
+        this->maxHealth *= 4/3;
         this->health = this->maxHealth;
     // TODO: Добавить расширение теретории при повышении уровня
     }
