@@ -39,7 +39,7 @@ public:
     void setBuilding(Building* building);
     void setUnit(Unit* unit);
     void setOwner(City* owner);
-    void setCitystateOwner(Citystate* citystate);
+    void setOwner(Citystate* citystate);
     void setRevealed(bool revealed);
 
     int getMovementCost(UnitType unitType);

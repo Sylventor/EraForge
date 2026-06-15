@@ -74,7 +74,7 @@ void Tile::setOwner(City* city) {
     }
     this->owner = city;
 }
-void Tile::setCitystateOwner(Citystate* citystate) {
+void Tile::setOwner(Citystate* citystate) {
     if (this->owner != nullptr) {
         this->owner = nullptr;
     }
