@@ -6,8 +6,12 @@
 #include "City.h"
 #include "Unit.h"
 
-
-// TODO: Сделать конструктор
+Civilization::Civilization(int startGold, std::vector<Building*> startResearchedBuildings, std::vector<Unit*> startResearchedUnits) {
+    this->gold = startGold;
+    this->science = 0;
+    this->researchedBuildings = startResearchedBuildings;
+    this->researchedUnits = startResearchedUnits;
+}
 
 int const Civilization::getGold() {
     return this->gold;
