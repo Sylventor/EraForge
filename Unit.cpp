@@ -4,7 +4,7 @@
 
 #include "Unit.h"
 #include "Game.h"
-
+#include "Civilization.h"
 #include "Tile.h"
 
 
@@ -23,6 +23,27 @@ Unit::Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMov
     this->type = type;
     this->requiredResources = requiredResources;
     this->requiredBuilding = requiredBuilding;
+}
+
+Unit::Unit(const Unit &unit) : name(unit.name), x(unit.x), y(unit.y), maxHealth(unit.maxHealth), health(unit.maxHealth),
+                               damage(unit.damage), maxMovement(unit.maxMovement), movement(unit.maxMovement),
+                               range(unit.range), cost(unit.cost), type(unit.type), requiredResources(unit.requiredResources),
+                               requiredBuilding(unit.requiredBuilding) {}
+
+Unit::Unit(const Unit &unit, int x, int y, Game* game) : name(unit.name), x(x), y(y), maxHealth(unit.maxHealth), health(unit.maxHealth),
+                                                   damage(unit.damage), maxMovement(unit.maxMovement), movement(unit.maxMovement),
+                                                   range(unit.range), cost(unit.cost), type(unit.type), requiredResources(unit.requiredResources),
+                                                   requiredBuilding(unit.requiredBuilding) {
+    game->getTile(x, y)->setUnit(this);
+    for (int nx = -2; nx <= 2; nx++) {
+        for (int ny = -2; ny <= 2; ny++) {
+            if (x+nx > 0 || x+nx < MAP_SIZE_X || y+ny > 0 || y+ny < MAP_SIZE_Y) {
+                Tile* t = game->getTile(x+nx, y+ny);
+                t->setRevealed(true);
+            }
+        }
+    }
+    game->getPlayer()->addUnit(this);
 }
 
 std::string const Unit::getName() {
@@ -87,6 +108,15 @@ void Unit::move(int x, int y, Game* game) {
     this->movement -= movementCost;
     this->x = x;
     this->y = y;
+
+    for (int nx = -2; nx <= 2; nx++) {
+        for (int ny = -2; ny <= 2; ny++) {
+            if (x+nx > 0 || x+nx < MAP_SIZE_X || y+ny > 0 || y+ny < MAP_SIZE_Y) {
+                Tile* t = game->getTile(x+nx, y+ny);
+                t->setRevealed(true);
+            }
+        }
+    }
 }
 
 void Unit::takeDamage(int hp) {

@@ -32,6 +32,10 @@ public:
     Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMovement, int range, UnitType type, int cost,
          std::map<Resource, int> requiredResources, Building* requiredBuilding);
 
+    Unit(const Unit &unit);
+
+    Unit(const Unit &unit, int x, int y, Game* game);
+
     std::string const getName();
     int const getX();
     int const getY();
