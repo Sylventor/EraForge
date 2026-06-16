@@ -21,6 +21,14 @@ Building::Building(std::string name, std::string icon, BuildingType type, int fo
     this->requiredTerrain = requiredTerrain;
 }
 
+Building::Building(const Building &building) : name(building.name), icon(building.icon), type(building.type),
+                                               foodBonus(building.foodBonus), goldBonus(building.goldBonus),
+                                               populationBonus(building.populationBonus),
+                                               scienceBonus(building.scienceBonus),
+                                               resourceBonus(building.scienceBonus),
+                                               requiredTerrain(building.requiredTerrain) {
+}
+
 std::string const Building::getName() {
     return name;
 }
