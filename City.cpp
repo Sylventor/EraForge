@@ -21,11 +21,15 @@ City::City(Game* game, Civilization* owner, int x, int y, std::string name) {
     int health = maxHealth;
     for (int nx = -2; nx <= 2; nx++) {
         for (int ny = -2; ny <= 2; ny++) {
-            Tile* t = game->getTile(x+nx, y+ny);
-            ownedTiles.push_back(t);
-            t->setOwner(this);
+            if (x+nx > 0 || x+nx < MAP_SIZE_X || y+ny > 0 || y+ny < MAP_SIZE_Y) {
+               Tile* t = game->getTile(x+nx, y+ny);
+               ownedTiles.push_back(t);
+               t->setOwner(this);
+               t->setRevealed(true);
+            }
         }
     }
+    game->getTile(x, y)->setBuilding(new Building(b_city));
 }
 
 std::vector<Tile*> const City::getOwnedTiles() {

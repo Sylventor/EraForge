@@ -17,6 +17,7 @@
 
 #include "Civilization.h"
 #include "Tile.h"
+#include "City.h"
 
 static void clearScreen() {
 #if defined(_WIN32) || defined(_WIN64)
@@ -38,7 +39,7 @@ static bool isWater(Tile* t) {
 Game::Game() {
     this->selectedTileX = 0;
     this->selectedTileY = 0;
-    this->player = nullptr;
+    this->player = new Civilization(300, {new Building(b_farm)}, {new Unit(u_warrior)});
     this->mapView = MapView::Base;
     this->generateMap();
 }
@@ -47,7 +48,7 @@ Civilization* const Game::getPlayer() {
     return this->player;
 }
 Tile* const Game::getTile(int x, int y) {
-    return this->map[x][y];
+    return this->map[y][x];
 }
 MapView const Game::getMapView() {
     return this->mapView;
@@ -65,7 +66,7 @@ Tile* const Game::getSelectedTile() {
 void Game::printMap() {
     for (int x = 0; x < MAP_SIZE_Y; x++) {
         for (int y = 0; y < MAP_SIZE_X; y++) {
-            this->map[x][y]->printTile(this->mapView);
+            this->map[y][x]->printTile(this->mapView);
         }
         fmt::print("\n");
     }
@@ -73,8 +74,6 @@ void Game::printMap() {
 
 void Game::generateMap()
 {
-    srand(time(nullptr));
-
     // 1. ВСЁ ОКЕАН
     for (int y = 0; y < MAP_SIZE_Y; y++) {
         for (int x = 0; x < MAP_SIZE_X; x++) {
@@ -189,12 +188,12 @@ void Game::generateMap()
 
         if (nearWater) continue;
 
-        map[y][x]->~Tile();
+        delete map[y][x];
         map[y][x] = new Tile(TerrainType::Mountains, Resource::Nothing);
     }
 
     // 5. РЕКИ (из гор к воде)
-    for (int i = 0; i < 2000; i++)
+    for (int i = 0; i < 1000; i++)
     {
         int x = rand() % MAP_SIZE_X;
         int y = rand() % MAP_SIZE_Y;
@@ -204,7 +203,7 @@ void Game::generateMap()
 
         for (int step = 0; step < 60; step++)
         {
-            map[y][x]->~Tile();
+            delete map[y][x];
             map[y][x] = new Tile(TerrainType::Rivers, Resource::Nothing);
 
             if (isWater(this->getTile(x, y)))
@@ -239,6 +238,18 @@ void Game::generateMap()
 
         end_river:;
     }
+    // Проверка на то, что хотя-бы 1 река сгенерировалась
+    bool has_rivers = false;
+    for (int y = 0; y < MAP_SIZE_Y && !has_rivers; y++) {
+        for (int x = 0; x < MAP_SIZE_X && !has_rivers; x++) {
+            if (this->getTile(x, y)->getTerrain() == TerrainType::Rivers) {
+                has_rivers = true;
+            }
+        }
+    }
+    if (!has_rivers) {
+        return this->generateMap();
+    }
 
     // 6. ЛЕСА
     for (int i = 0; i < 200; i++)
@@ -260,7 +271,7 @@ void Game::generateMap()
                 if (rand() % 100 < 60 &&
                     map[ny][nx]->getTerrain() == TerrainType::Plains)
                 {
-                    map[ny][nx]->~Tile();
+                    delete map[ny][nx];
                     map[ny][nx] = new Tile(TerrainType::Forest, Resource::Nothing);
                 }
             }
@@ -286,7 +297,7 @@ void Game::generateMap()
 
                 if (map[ny][nx]->getTerrain() == TerrainType::Plains && (rand() % 100 < 40))
                 {
-                    map[ny][nx]->~Tile();
+                    delete map[ny][nx];
                     map[ny][nx] = new Tile(TerrainType::Desert, Resource::Nothing);
                 }
             }
@@ -314,11 +325,39 @@ void Game::generateMap()
 
             if (r != Resource::Nothing)
             {
-                map[y][x]->~Tile();
+                delete map[y][x];
                 map[y][x] = new Tile(t, r);
             }
         }
     }
+
+    // 9. Генрация города
+    City* city = nullptr;
+    do {
+        int x = rand() % MAP_SIZE_X;
+        int y = rand() % MAP_SIZE_Y;
+
+        if (map[y][x]->getTerrain() == TerrainType::Rivers) {
+            int roll = rand() % 100;
+            if (roll < 10) {
+                city = new City(this, player, x, y, "Test");
+                int ux, uy;
+                for (int nx = -1; nx <= 1; nx++) {
+                    for (int ny = -1; ny <= 1; ny++) {
+                        if (inBounds(x+nx, y+ny)) {
+                            Tile* t = this->getTile(x+nx, y+ny);
+                            if ((t->getTerrain() == TerrainType::Rivers || t->getTerrain() == TerrainType::Desert || t->getTerrain() == TerrainType::Plains || t->getTerrain() == TerrainType::Forest) && !t->getBuilding()) {
+                                ux = x+nx;
+                                uy = y+ny;
+                            }
+                        }
+                    }
+                }
+                if (!ux || !uy) return this->generateMap();
+                Unit* startUnit = new Unit(u_warrior, ux, uy, this);
+            }
+        }
+    } while (city == nullptr);
 }
 
 void Game::showMainMenu() {
@@ -399,5 +438,6 @@ void Game::playerTurn() {
     clearScreen();
     printStats();
     this->printMap();
+    system("pause");
 }
 

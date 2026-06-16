@@ -129,7 +129,6 @@ static Building b_temple{"Temple","T",BuildingType::Science,1,0,1,3,0,90,Resourc
 static Building b_granary{"Granary","G",BuildingType::Economy,5,0,2,0,0,60,Resource::Nothing,std::vector<TerrainType>{TerrainType::Plains}};
 static Building b_aqueduct{"Aqueduct","A",BuildingType::Economy,6,0,3,0,0,130,Resource::Nothing,std::vector<TerrainType>{TerrainType::Plains}};
 static Building b_castle{"Castle","C",BuildingType::Military,0,2,2,1,0,180,Resource::Rocks,std::vector<TerrainType>{TerrainType::Plains}};
-static Building b_wall{"Wall","W",BuildingType::Military,0,1,0,0,0,50,Resource::Rocks,std::vector<TerrainType>{TerrainType::Plains}};
 static Building b_watchtower{"Watchtower","T",BuildingType::Military,0,1,0,0,0,60,Resource::Nothing,std::vector<TerrainType>{TerrainType::Plains}};
 static Building b_windmill{"Windmill","W",BuildingType::Production,2,2,0,0,1,80,Resource::Nothing,std::vector<TerrainType>{TerrainType::Plains}};
 static Building b_hydro{"Hydro","H",BuildingType::Production,0,4,0,3,3,220,Resource::Nothing,std::vector<TerrainType>{TerrainType::Rivers}};
@@ -172,6 +171,122 @@ static Citystate cs5{"Rome",CitystateType::Military,{(Unit*)&u_infantry},500,20,
 static Citystate cs6{"Carthage",CitystateType::Economic,{(Unit*)&u_horse},350,18,250,12,-1,-1,400,600};
 static Citystate cs7{"Babylon",CitystateType::Science,{(Unit*)&u_spearman},280,14,600,30,-1,-1,300,500};
 static Citystate cs8{"Tokyo",CitystateType::Military,{(Unit*)&u_knight},450,22,350,18,-1,-1,500,700};
+
+static std::vector<Citystate> cs_list = {cs1, cs2, cs3, cs4, cs5, cs6, cs7, cs8};
+
+// City names
+
+static const std::vector<std::string> CITY_NAMES = {
+    "Athens",
+    "Sparta",
+    "Corinth",
+    "Thebes",
+    "Argos",
+    "Delphi",
+    "Olympia",
+    "Rhodes",
+    "Knossos",
+    "Ephesus",
+
+    "Rome",
+    "Neapolis",
+    "Mediolanum",
+    "Ravenna",
+    "Pompeii",
+    "Capua",
+    "Tarentum",
+    "Brundisium",
+    "Syracuse",
+    "Aquileia",
+
+    "Babylon",
+    "Ur",
+    "Uruk",
+    "Nineveh",
+    "Akkad",
+    "Nippur",
+    "Eridu",
+    "Lagash",
+    "Assur",
+    "Mari",
+
+    "Alexandria",
+    "Memphis",
+    "ThebesEgypt",
+    "Heliopolis",
+    "Giza",
+    "Abydos",
+    "Amarna",
+    "Tanis",
+    "Sais",
+    "Elephantine",
+
+    "Jerusalem",
+    "Damascus",
+    "Tyre",
+    "Sidon",
+    "Byblos",
+    "Antioch",
+    "Palmyra",
+    "Gaza",
+    "Jericho",
+    "Aleppo",
+
+    "Carthage",
+    "Utica",
+    "Hippo",
+    "Leptis",
+    "Thapsus",
+    "Hadrumetum",
+    "Cirta",
+    "Volubilis",
+    "Tingis",
+    "Lixus",
+
+    "Constantinople",
+    "Byzantium",
+    "Nicaea",
+    "Trebizond",
+    "Edirne",
+    "Smyrna",
+    "Ankara",
+    "Pergamon",
+    "Miletus",
+    "Halicarnassus",
+
+    "Paris",
+    "London",
+    "York",
+    "Dublin",
+    "Edinburgh",
+    "Lisbon",
+    "Madrid",
+    "Barcelona",
+    "Seville",
+    "Valencia",
+
+    "Prague",
+    "Vienna",
+    "Budapest",
+    "Warsaw",
+    "Krakow",
+    "Brno",
+    "Ostrava",
+    "Bratislava",
+    "Zagreb",
+    "Ljubljana",
+
+    "Kyiv",
+    "Lviv",
+    "Kharkiv",
+    "Odessa",
+    "Dnipro",
+    "Chernihiv",
+    "Poltava",
+    "Vinnytsia",
+    "Zhytomyr",
+    "Lutsk"
+};
 
 
 #endif //UNTITLED_COLORS_H

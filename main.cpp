@@ -8,9 +8,6 @@
 
 
 int main() {
-
-
-
     srand(time(nullptr));
 
     Game* game = new Game();
