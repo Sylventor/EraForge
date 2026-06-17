@@ -43,7 +43,7 @@ public:
     void setRevealed(bool revealed);
 
     int getMovementCost(UnitType unitType);
-    void printTile(MapView mapView);
+    void printTile(MapView mapView, bool isSelected);
 };
 
 

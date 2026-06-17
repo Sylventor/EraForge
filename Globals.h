@@ -38,6 +38,7 @@
 #define COLOR2 fmt::rgb(255, 255, 255)
 #define COLOR3 fmt::rgb(0, 0, 0)
 #define COLOR4 fmt::rgb(57, 69, 89)
+#define COLOR5 fmt::rgb(98, 201, 14)
 
 #define COLOR_GOLD fmt::rgb(242, 195, 24)
 #define COLOR_SCIENCE fmt::rgb(96, 171, 224)
@@ -163,14 +164,14 @@ static Unit u_spy{"Spy",-1,-1,50,-1,5,1,UnitType::Melee,80,{{Resource::Nothing,0
 static Unit u_art{"Artillery",-1,-1,100,50,2,4,UnitType::Siege,400,{{Resource::Coal,2}},&b_factory_d};
 static Unit u_heli{"Helicopter",-1,-1,180,40,5,2,UnitType::Cavalry,450,{{Resource::Coal,2}},&b_factory_d};
 
-static Citystate cs1{"Athena",CitystateType::Science,{(Unit*)&u_archer},200,10,500,25,-1,-1,300,500};
-static Citystate cs2{"Sparta",CitystateType::Military,{(Unit*)&u_swords},300,15,100,5,-1,-1,400,600};
-static Citystate cs3{"Venice",CitystateType::Economic,{(Unit*)&u_marine},400,25,200,10,-1,-1,350,550};
-static Citystate cs4{"Alexandria",CitystateType::Science,{(Unit*)&u_cross},250,12,450,20,-1,-1,320,500};
-static Citystate cs5{"Rome",CitystateType::Military,{(Unit*)&u_infantry},500,20,300,15,-1,-1,600,800};
-static Citystate cs6{"Carthage",CitystateType::Economic,{(Unit*)&u_horse},350,18,250,12,-1,-1,400,600};
-static Citystate cs7{"Babylon",CitystateType::Science,{(Unit*)&u_spearman},280,14,600,30,-1,-1,300,500};
-static Citystate cs8{"Tokyo",CitystateType::Military,{(Unit*)&u_knight},450,22,350,18,-1,-1,500,700};
+static Citystate cs1{"Athena",CitystateType::Science,{(Unit*)&u_archer},200,10,500,25,-1,-1,300,500, fmt::rgb(176, 42, 42)};
+static Citystate cs2{"Sparta",CitystateType::Military,{(Unit*)&u_swords},300,15,100,5,-1,-1,400,600, fmt::rgb(199, 199, 18)};
+static Citystate cs3{"Venice",CitystateType::Economic,{(Unit*)&u_marine},400,25,200,10,-1,-1,350,550, fmt::rgb(42, 199, 18)};
+static Citystate cs4{"Alexandria",CitystateType::Science,{(Unit*)&u_cross},250,12,450,20,-1,-1,320,500, fmt::rgb(16, 196, 193)};
+static Citystate cs5{"Rome",CitystateType::Military,{(Unit*)&u_infantry},500,20,300,15,-1,-1,600,800, fmt::rgb(22, 113, 217)};
+static Citystate cs6{"Carthage",CitystateType::Economic,{(Unit*)&u_horse},350,18,250,12,-1,-1,400,600, fmt::rgb(109, 7, 242)};
+static Citystate cs7{"Babylon",CitystateType::Science,{(Unit*)&u_spearman},280,14,600,30,-1,-1,300,500, fmt::rgb(230, 9, 185)};
+static Citystate cs8{"Tokyo",CitystateType::Military,{(Unit*)&u_knight},450,22,350,18,-1,-1,500,700, fmt::rgb(162, 212, 25)};
 
 static std::vector<Citystate> cs_list = {cs1, cs2, cs3, cs4, cs5, cs6, cs7, cs8};
 

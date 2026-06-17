@@ -18,6 +18,8 @@ Tile::Tile(TerrainType terrain, Resource resource, Building* building, Unit* uni
     this->resource = resource;
     this->building = building;
     this->unit = unit;
+    this->owner = nullptr;
+    this->citystateOwner = nullptr;
     this->revealed = false;
 }
 
@@ -27,6 +29,7 @@ Tile::Tile(TerrainType terrain, Resource resource) {
     this->building = nullptr;
     this->unit = nullptr;
     this->owner = nullptr;
+    this->citystateOwner = nullptr;
     this->revealed = false;
 }
 
@@ -208,7 +211,7 @@ int Tile::getMovementCost(UnitType unitType) {
     return -5; // Returns -5 if other returns didn't work
 }
 
-void Tile::printTile(MapView mapView) {
+void Tile::printTile(MapView mapView, bool isSelected) {
     fmt::rgb bg_color;
     fmt::rgb fg_color1;
     fmt::rgb fg_color2;
@@ -221,6 +224,10 @@ void Tile::printTile(MapView mapView) {
         fg_color2 = resource_fg.at(this->resource);
         terrain_icon = terrain_icons.at(this->terrain);
         icon = resource_icons.at(this->resource);
+        if (this->resource == Resource::Nothing) {
+            fg_color2 = fg_color1;
+            icon = terrain_icon;
+        }
     }
     else if (mapView == MapView::Units) {
         bg_color = terrain_bg.at(this->terrain);
@@ -236,10 +243,10 @@ void Tile::printTile(MapView mapView) {
         }
     }
     else if (mapView == MapView::Politic) {
-        if (citystateOwner) {
+        if (citystateOwner != nullptr) {
             bg_color = citystateOwner->getColor();
-        } else if (owner) {
-            bg_color = COLOR1;
+        } else if (owner != nullptr) {
+            bg_color = COLOR5;
         } else {
             bg_color = terrain_bg.at(this->terrain);
         }
@@ -274,11 +281,21 @@ void Tile::printTile(MapView mapView) {
         }
     }
 
-    if (this->revealed) {
-        fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
-        fmt::print(bg(bg_color) | fg(fg_color2), "{}", icon);
-        fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
+    if (isSelected) {
+        if (this->revealed) {
+            fmt::print(fmt::emphasis::bold | fmt::emphasis::underline | bg(bg_color) | fg(COLOR2), "{}", terrain_icon);
+            fmt::print(fmt::emphasis::bold | fmt::emphasis::underline | bg(bg_color) | fg(COLOR2), "{}", icon);
+            fmt::print(fmt::emphasis::bold | fmt::emphasis::underline | bg(bg_color) | fg(COLOR2), "{}", terrain_icon);
+        } else {
+            fmt::print(fmt::emphasis::bold | fmt::emphasis::underline | bg(NOT_REVEALED_C1) | fg(COLOR2), "###");
+        }
     } else {
-        fmt::print(bg(NOT_REVEALED_C1) | fg(NOT_REVEALED_C2), "###");
+        if (this->revealed) {
+            fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
+            fmt::print(bg(bg_color) | fg(fg_color2), "{}", icon);
+            fmt::print(bg(bg_color) | fg(fg_color1), "{}", terrain_icon);
+        } else {
+            fmt::print(bg(NOT_REVEALED_C1) | fg(NOT_REVEALED_C2), "###");
+        }
     }
 }

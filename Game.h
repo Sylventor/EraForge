@@ -19,6 +19,8 @@ private:
     MapView mapView;
     int selectedTileX;
     int selectedTileY;
+
+    void clearMap();
 public:
     Game();
 
@@ -31,6 +33,7 @@ public:
 
 
     void printMap();
+    void printSelectedTile();
     void printStats();
     void generateMap();
     void startGame();

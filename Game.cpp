@@ -12,6 +12,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <string>
 
 #include "Game.h"
 
@@ -44,6 +45,17 @@ Game::Game() {
     this->generateMap();
 }
 
+void Game::clearMap() {
+    for (int y = 0; y < MAP_SIZE_Y; y++) {
+        for (int x = 0; x < MAP_SIZE_X; x++) {
+            if (map[y][x] == nullptr) continue;
+
+            delete map[y][x];
+            map[y][x] = nullptr;
+        }
+    }
+}
+
 Civilization* const Game::getPlayer() {
     return this->player;
 }
@@ -64,9 +76,13 @@ Tile* const Game::getSelectedTile() {
 }
 
 void Game::printMap() {
-    for (int x = 0; x < MAP_SIZE_Y; x++) {
-        for (int y = 0; y < MAP_SIZE_X; y++) {
-            this->map[y][x]->printTile(this->mapView);
+    for (int y = 0; y < MAP_SIZE_Y; y++) {
+        for (int x = 0; x < MAP_SIZE_X; x++) {
+            if (x == selectedTileX && y == selectedTileY) {
+                this->map[y][x]->printTile(this->mapView, true);
+            } else {
+                this->map[y][x]->printTile(this->mapView, false);
+            }
         }
         fmt::print("\n");
     }
@@ -248,6 +264,7 @@ void Game::generateMap()
         }
     }
     if (!has_rivers) {
+        this->clearMap();
         return this->generateMap();
     }
 
@@ -341,7 +358,8 @@ void Game::generateMap()
             int roll = rand() % 100;
             if (roll < 10) {
                 city = new City(this, player, x, y, "Test");
-                int ux, uy;
+                int ux = -1;
+                int uy = -1;
                 for (int nx = -1; nx <= 1; nx++) {
                     for (int ny = -1; ny <= 1; ny++) {
                         if (inBounds(x+nx, y+ny)) {
@@ -353,8 +371,13 @@ void Game::generateMap()
                         }
                     }
                 }
-                if (!ux || !uy) return this->generateMap();
+                if (ux == -1 || uy == -1) {
+                    this->clearMap();
+                    return this->generateMap();
+                }
                 Unit* startUnit = new Unit(u_warrior, ux, uy, this);
+                this->selectedTileX = x;
+                this->selectedTileY = y;
             }
         }
     } while (city == nullptr);
@@ -397,7 +420,7 @@ void Game::showMainMenu() {
             choise = -1;
         }
         std::this_thread::sleep_for(std::chrono::seconds(1));
-    } while (choise == -1);
+    } while (choise == -1 || choise == 2);
     switch (choise) {
         case 0:
             exit(0);
@@ -421,23 +444,84 @@ void Game::startGame() {
 }
 
 void Game::printStats() {
-    fmt::print(fg(COLOR_GOLD) | bg(COLOR4),"o Gold: ");
-    fmt::print(fg(COLOR_SCIENCE) | bg(COLOR4), "Δ Science: \n");
+    fmt::print(fg(COLOR_GOLD) | bg(COLOR4),"o Gold: {} ", this->player->getGold());
+    fmt::print(fg(COLOR_SCIENCE) | bg(COLOR4), "Δ Science: {}", this->player->getScience());
+    int printed = fmt::format("o Gold: {} ", this->player->getGold()).size()
+            + fmt::format("Δ Science: {}", this->player->getScience()).size();
     for (const auto& pair : this->player->getResources())
     {
         Resource key = pair.first;
         int value = pair.second;
 
         fmt::print(fg(resource_fg.at(key)) | bg(COLOR4), "{} {}: {}", resource_icons.at(key), resource_names.at(key), value);
+        printed += fmt::format("{} {}: {} ", resource_icons.at(key), resource_names.at(key), value).size();
     }
+    fmt::print(bg(COLOR4), "{}\n", std::string(MAP_SIZE_X*3 + 1 - printed, ' '));
 }
 
 void Game::printControls() {}
 
 void Game::playerTurn() {
-    clearScreen();
-    printStats();
-    this->printMap();
-    system("pause");
+    std::string action;
+    do {
+        clearScreen();
+        printStats();
+        this->printMap();
+        fmt::print(fg(COLOR2) | bg(COLOR4), "Choose your aciton (Type \"c\" to see controls list) > ");
+        std::getline(std::cin, action);
+        if (action == "w") {
+            this->moveSelect(0, -1);
+        } else if (action == "s") {
+            this->moveSelect(0, 1);
+        } else if (action == "a") {
+            this->moveSelect(-1, 0);
+        } else if (action == "d") {
+            this->moveSelect(1, 0);
+        } else if (action == "q") {
+            std::string choice;
+            fmt::print(fg(COLOR2) | bg(COLOR4), "Are you sure you want to leave the game? (Y/n) > ");
+            std::getline(std::cin, choice);
+            if (choice == "Y") {
+                exit(0);
+            }
+        } else if (action == "m") {
+            int choice;
+            fmt::print(fg(COLOR2) | bg(COLOR4), "What view of map you want change to? (1 - Terrain, 2 - Politic, 3 - Units, 4 - Basic) > ");
+            std::cin >> choice;
+            switch (choice) {
+                case 1:
+                    this->mapView = MapView::Terrain;
+                    break;
+                case 2:
+                    this->mapView = MapView::Politic;
+                    break;
+                case 3:
+                    this->mapView = MapView::Units;
+                    break;
+                case 4:
+                    this->mapView = MapView::Base;
+                    break;
+            }
+            std::cin.ignore();
+        }
+    } while (action != "0");
 }
 
+void Game::moveSelect(int dx, int dy) {
+    int nx = this->selectedTileX + dx;
+    int ny = this->selectedTileY + dy;
+    if (nx >= 0 && nx < MAP_SIZE_X) {
+        this->selectedTileX = nx;
+    } else if (nx < 0) {
+        this->selectedTileX = MAP_SIZE_X-1;
+    } else if (nx >= MAP_SIZE_X) {
+        this->selectedTileX = 0;
+    }
+    if (ny >= 0 && ny < MAP_SIZE_Y) {
+        this->selectedTileY = ny;
+    } else if (ny < 0) {
+        this->selectedTileY = MAP_SIZE_Y-1;
+    } else if (ny >= MAP_SIZE_Y) {
+        this->selectedTileY = 0;
+    }
+}
