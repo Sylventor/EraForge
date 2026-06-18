@@ -75,6 +75,136 @@ Tile* const Game::getSelectedTile() {
     return this->getTile(this->selectedTileX, this->selectedTileY);
 }
 
+void Game::printSelectedTile() {
+    Tile* t = this->getTile(this->selectedTileX, this->selectedTileY);
+    if (t != nullptr && t->getRevealed()) {
+        if (t->getBuilding() != nullptr) {
+            Building* b = t->getBuilding();
+            BuildingType type = b->getType();
+            switch (type) {
+                case BuildingType::City:
+                    if (t->getOwner() != nullptr) {
+                        City* c = t->getOwner();
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "City {}, population: {}, food: {}, health {}/{}", c->getName(), c->getPopulation(), c->getFood(), c->getHealth(), c->getMaxHealth());
+                    } else if (t->getCitystateOwner() != nullptr) {
+                        Citystate* c = t->getCitystateOwner();\
+                        std::string ctype;
+                        switch (c->getType()) {
+                            case CitystateType::Economic:
+                                ctype = "Economic";
+                                break;
+                            case CitystateType::Military:
+                                ctype = "Military";
+                                break;
+                            case CitystateType::Science:
+                                ctype = "Science";
+                                break;
+                            default:
+                                ctype = "Unknown";
+                                break;
+                        }
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "Citystate {}, type: {}, health {}/{}", c->getName(), ctype, c->getHealth(), c->getMaxHealth());
+                    }
+                    break;
+                case BuildingType::Economy:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Building {}, type: Economy, food bonus: {}, population bonus: {}, gold bonus: {}, science bonus: {}, resource bonus: {}", b->getName(), b->getFoodBonus(), b->getPopulationBonus(), b->getGoldBonus(), b->getScienceBonus(), b->getResourceBonus());
+                    break;
+                case BuildingType::Science:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Building {}, type: Science, food bonus: {}, population bonus: {}, gold bonus: {}, science bonus: {}, resource bonus: {}", b->getName(), b->getFoodBonus(), b->getPopulationBonus(), b->getGoldBonus(), b->getScienceBonus(), b->getResourceBonus());
+                    break;
+                case BuildingType::Military:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Building {}, type: Military, food bonus: {}, population bonus: {}, gold bonus: {}, science bonus: {}, resource bonus: {}", b->getName(), b->getFoodBonus(), b->getPopulationBonus(), b->getGoldBonus(), b->getScienceBonus(), b->getResourceBonus());
+                    break;
+                case BuildingType::Production:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Building {}, type: Production, food bonus: {}, population bonus: {}, gold bonus: {}, science bonus: {}, resource bonus: {}", b->getName(), b->getFoodBonus(), b->getPopulationBonus(), b->getGoldBonus(), b->getScienceBonus(), b->getResourceBonus());
+                    break;
+                default:
+                    break;
+            }
+            std::cout << std::endl;
+        }
+        if (t->getUnit() != nullptr) {
+            Unit* u = t->getUnit();
+            UnitType type = u->getType();
+            switch (type) {
+                case UnitType::Melee:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Unit {}, type: Melee, health: {}/{}, range: {}, movement points: {}/{}, damage: {}", u->getName(), u->getHealth(), u->getMaxHealth(), u->getRange(), u->getMovement(), u->getMaxMovement(), u->getDamage());
+                    break;
+                case UnitType::Cavalry:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Unit {}, type: Cavalry, health: {}/{}, range: {}, movement points: {}/{}, damage: {}", u->getName(), u->getHealth(), u->getMaxHealth(), u->getRange(), u->getMovement(), u->getMaxMovement(), u->getDamage());
+                    break;
+                case UnitType::AntiCavalry:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Unit {}, type: AntiCavalry, health: {}/{}, range: {}, movement points: {}/{}, damage: {}", u->getName(), u->getHealth(), u->getMaxHealth(), u->getRange(), u->getMovement(), u->getMaxMovement(), u->getDamage());
+                    break;
+                case UnitType::Naval:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Unit {}, type: Naval, health: {}/{}, range: {}, movement points: {}/{}, damage: {}", u->getName(), u->getHealth(), u->getMaxHealth(), u->getRange(), u->getMovement(), u->getMaxMovement(), u->getDamage());
+                    break;
+                case UnitType::Siege:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Unit {}, type: Siege, health: {}/{}, range: {}, movement points: {}/{}, damage: {}", u->getName(), u->getHealth(), u->getMaxHealth(), u->getRange(), u->getMovement(), u->getMaxMovement(), u->getDamage());
+                    break;
+                case UnitType::Ranged:
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Unit {}, type: Ranged, health: {}/{}, range: {}, movement points: {}/{}, damage: {}", u->getName(), u->getHealth(), u->getMaxHealth(), u->getRange(), u->getMovement(), u->getMaxMovement(), u->getDamage());
+                    break;
+                default:
+                    break;
+            }
+            std::cout << std::endl;
+        }
+        std::string owner = "Free";
+        if (t->getOwner() != nullptr) {
+            owner = t->getOwner()->getName();
+        } else if (t->getCitystateOwner() != nullptr) {
+            owner = t->getCitystateOwner()->getName();
+        }
+        std::string terrain = "Unkonown";
+        std::string resource = "Nothing";
+        switch (t->getTerrain()) {
+            case TerrainType::Plains:
+                terrain = "Plains";
+                break;
+            case TerrainType::Desert:
+                terrain = "Desert";
+                break;
+            case TerrainType::Forest:
+                terrain = "Forest";
+                break;
+            case TerrainType::Mountains:
+                terrain = "Mountains";
+                break;
+            case TerrainType::Ocean:
+                terrain = "Ocean";
+                break;
+            case TerrainType::Rivers:
+                terrain = "Rivers";
+                break;
+            case TerrainType::Shallow:
+                terrain = "Shallow";
+                break;
+            default:
+                break;
+        }
+        switch (t->getResource()) {
+            case Resource::Coal:
+                resource = "Coal";
+                break;
+            case Resource::Horses:
+                resource = "Horses";
+                break;
+            case Resource::Iron:
+                resource = "Iron";
+                break;
+            case Resource::Nothing:
+                resource = "Nothing";
+                break;
+            case Resource::Rocks:
+                resource = "Rocks";
+                break;
+        }
+        fmt::print(fg(COLOR2) | bg(COLOR4), "Owner: {}, terrain: {}, resource: {}", owner, terrain, resource);
+        std::cout << std::endl;
+    }
+}
+
 void Game::printMap() {
     for (int y = 0; y < MAP_SIZE_Y; y++) {
         for (int x = 0; x < MAP_SIZE_X; x++) {
@@ -467,6 +597,7 @@ void Game::playerTurn() {
         clearScreen();
         printStats();
         this->printMap();
+        printSelectedTile();
         fmt::print(fg(COLOR2) | bg(COLOR4), "Choose your aciton (Type \"c\" to see controls list) > ");
         std::getline(std::cin, action);
         if (action == "w") {

@@ -14,11 +14,11 @@ City::City(Game* game, Civilization* owner, int x, int y, std::string name) {
     this->x = x;
     this->y = y;
     this->name = name;
-    int population = 3;
-    int populationForUpgrade = 6;
-    int food = 3;
-    int maxHealth = 300;
-    int health = maxHealth;
+    this->population = 3;
+    this->populationForUpgrade = 6;
+    this->food = 3;
+    this->maxHealth = 300;
+    this->health = maxHealth;
     for (int nx = -2; nx <= 2; nx++) {
         for (int ny = -2; ny <= 2; ny++) {
             if (x+nx > 0 && x+nx < MAP_SIZE_X && y+ny > 0 && y+ny < MAP_SIZE_Y) {

@@ -45,7 +45,6 @@ public:
     int const getMovement();
     int const getMaxMovement();
     int const getRange();
-    int const getMaxRange();
     int const getCost();
     UnitType const getType();
     std::map<Resource, int> const getRequiredResources();
