@@ -26,6 +26,7 @@ private:
 public:
     Building(std::string name, std::string icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus, int scienceBonus, int resourceBonus, int cost, int researchCost, Resource requiredResource, std::vector<TerrainType> requiredTerrain);
     Building(const Building& building);
+    Building(const Building* building);
 
     std::string getName() const;
     std::string getIcon() const;

@@ -42,9 +42,8 @@ static bool isWater(Tile* t) {
 Game::Game() {
     this->selectedTileX = 0;
     this->selectedTileY = 0;
-    this->player = new Civilization(300, {new Building(b_city), new Building(b_farm)}, {new Unit(u_warrior)});
+    this->player = new Civilization(300, {new Building(b_farm)}, {new Unit(u_warrior)});
     this->mapView = MapView::Base;
-    this->generateMap();
 }
 
 void Game::clearMap() {
@@ -751,7 +750,7 @@ void Game::playerTurn() {
         }
         else if (action == "e") {
             Tile* t = this->getSelectedTile();
-            if (t->getUnit() != nullptr && t->getOwner() != nullptr) {
+            if (t->getUnit() != nullptr) {
                 Unit* unit = t->getUnit();
                 std::string choice;
                 int result = 0;
@@ -760,15 +759,19 @@ void Game::playerTurn() {
                     std::getline(std::cin, choice);
                     if (choice == "w") {
                         result = unit->move(unit->getX(), unit->getY()-1, this);
+                        this->moveSelect(0, -1);
                     }
                     else if (choice == "a") {
                         result = unit->move(unit->getX()-1, unit->getY(), this);
+                        this->moveSelect(-1, 0);
                     }
                     else if (choice == "s") {
                         result = unit->move(unit->getX(), unit->getY()+1, this);
+                        this->moveSelect(0, 1);
                     }
                     else if (choice == "d") {
                         result = unit->move(unit->getX()+1, unit->getY(), this);
+                        this->moveSelect(1, 0);
                     }
                     if (result != 0) {
                         if (result == 1) {
@@ -816,6 +819,65 @@ void Game::playerTurn() {
                         }
                     }
                 } while (choice != "0");
+            }
+        }
+        else if (action == "q") {
+            Tile* t = this->getSelectedTile();
+            if (t->getOwner() != nullptr && t->getBuilding() == nullptr) {
+                int choice = -1;
+                do {
+                    int counter = 1;
+                    for (Building* b : this->player->getResearchedBuildings()) {
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "{} | {}, cost: {} gold\n", counter, b->getName(), b->getCost());
+                        counter++;
+                    }
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Enter number of building you want to build (0 to leave this menu) >");
+
+                    std::cin >> choice;
+
+                    if (std::cin.fail()) {
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "Error: enter a number!\n");
+
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        choice = -1;
+                        std::this_thread::sleep_for(std::chrono::seconds(1));
+                        continue;
+                    }
+
+                    if (choice > 0 && choice <= this->player->getResearchedBuildings().size()) {
+                        Building* building = this->player->getResearchedBuildings()[choice-1];
+                        if (building->getCost() > this->player->getGold()) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "You don't have enough gold!\n");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            continue;
+                        }
+
+                        bool isTerrainSuitable = false;
+                        for (TerrainType terr : building->getRequiredTerrain()) {
+                            if (terr == t->getTerrain()) {
+                                isTerrainSuitable = true;
+                                break;
+                            }
+                        }
+                        bool isResourceSuitable = building->getRequiredResource() == t->getResource() || building->getRequiredResource() == Resource::Nothing;
+
+                        if (!isTerrainSuitable || !isResourceSuitable) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "You can't place it here!\n");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            continue;
+                        }
+
+                        this->player->removeGold(building->getCost());
+                        t->setBuilding(new Building(building));
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "Building successfully built!");
+                        std::this_thread::sleep_for(std::chrono::seconds(1));
+                        choice = 0;
+                    }
+                } while (choice != 0);
+            } else {
+                fmt::print(fg(COLOR2) | bg(COLOR4), "Can't build on foreign territory\n");
+                std::this_thread::sleep_for(std::chrono::seconds(1));
             }
         }
     } while (action != "0");

@@ -76,20 +76,20 @@ void City::repair(int health) {
 }
 
 void City::update() {
-    int newFood = 3;
+    int newFood = 0;
     int newPopulation = 0;
     double bonus = 1;
 
     if (this->food < this->population) {
         bonus = 1/(food - population);
     }
-    if (this->food-this->population >= this->population) {
+    if (this->food >= this->population*2) {
         bonus = 1.5;
     }
 
     for (Tile* tile : ownedTiles) {
         Building* building = tile->getBuilding();
-        if (building) {
+        if (building != nullptr) {
             newFood += building->getFoodBonus();
             newPopulation += building->getPopulationBonus();
             this->owner->addGold(building->getGoldBonus() * bonus);

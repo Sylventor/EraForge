@@ -32,6 +32,17 @@ Building::Building(const Building &building) : name(building.name), icon(buildin
                                                researchCost(building.researchCost) {
 }
 
+Building::Building(const Building* building) : name(building->name), icon(building->icon), type(building->type),
+                                               foodBonus(building->foodBonus), goldBonus(building->goldBonus),
+                                               populationBonus(building->populationBonus),
+                                               scienceBonus(building->scienceBonus),
+                                               resourceBonus(building->resourceBonus),
+                                               requiredTerrain(building->requiredTerrain),
+                                               requiredResource(building->requiredResource), cost(building->cost),
+                                               researchCost(building->researchCost) {
+}
+
+
 std::string Building::getName() const {
     return name;
 }

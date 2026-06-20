@@ -116,7 +116,7 @@ const std::map<Resource, fmt::rgb> resource_fg = {
 
 static Building b_city{
     "City","C",BuildingType::City,
-    3,2,5,1,1,
+    3,2,0,1,1,
     500,0,
     Resource::Nothing,
     {TerrainType::Plains, TerrainType::Forest, TerrainType::Desert, TerrainType::Rivers}
@@ -338,11 +338,10 @@ static Unit u_marine{"Marine",-1,-1,160,28,3,1,UnitType::Naval,200,90,{{Resource
 static Unit u_destroyer{"Destroyer",-1,-1,220,40,4,2,UnitType::Naval,420,220,{{Resource::Coal,1}},&b_harbor};
 static Unit u_sub{"Submarine",-1,-1,180,35,4,1,UnitType::Naval,380,200,{{Resource::Coal,1}},&b_harbor};
 static Unit u_scout{"Scout",-1,-1,60,5,5,1,UnitType::Melee,30,5,{{Resource::Nothing,0}},nullptr};
-static Unit u_spy{"Spy",-1,-1,50,-1,5,1,UnitType::Melee,90,40,{{Resource::Nothing,0}},nullptr};
 static Unit u_art{"Artillery",-1,-1,100,50,2,4,UnitType::Siege,450,250,{{Resource::Coal,2}},&b_factory_d};
 static Unit u_heli{"Helicopter",-1,-1,180,40,5,2,UnitType::Cavalry,520,300,{{Resource::Coal,2}},&b_factory_d};
 
-static std::vector<Unit> u_list = {u_warrior, u_spearman, u_archer, u_horse, u_knight, u_catapult, u_trebuchet, u_swords, u_pike, u_cross, u_longbow, u_cannon, u_tank, u_marine, u_destroyer, u_sub, u_scout, u_spy, u_art, u_heli};
+static std::vector<Unit> u_list = {u_warrior, u_spearman, u_archer, u_horse, u_knight, u_catapult, u_trebuchet, u_swords, u_pike, u_cross, u_longbow, u_cannon, u_tank, u_marine, u_destroyer, u_sub, u_scout, u_art, u_heli};
 
 static Citystate cs1{"Athena",CitystateType::Science,{(Unit*)&u_archer},200,10,500,25,-1,-1,300,500, fmt::rgb(176, 42, 42)};
 static Citystate cs2{"Sparta",CitystateType::Military,{(Unit*)&u_swords},300,15,100,5,-1,-1,400,600, fmt::rgb(199, 199, 18)};
