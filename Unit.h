@@ -52,10 +52,12 @@ public:
     std::map<Resource, int> getRequiredResources() const;
     Building* getRequiredBuilding() const;
 
-    void move(int x, int y, Game* game);
+    int move(int x, int y, Game* game);
     void attack(int x, int y, Game* game);
-    void upgrade();
+    void update(Game* game);
     void takeDamage(int hp);
+    void heal(int hp);
+    void revealMap(Game* game);
 };
 
 

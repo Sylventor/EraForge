@@ -24,12 +24,12 @@ private:
 public:
     Game();
 
-    Civilization* const getPlayer();
-    Tile* const getTile(int x, int y);
-    MapView const getMapView();
-    int const getSelectedTileX();
-    int const getSelectedTileY();
-    Tile* const getSelectedTile();
+    Civilization* getPlayer() const;
+    Tile* getTile(int x, int y) const;
+    MapView getMapView() const;
+    int getSelectedTileX() const;
+    int getSelectedTileY() const;
+    Tile* getSelectedTile() const;
 
 
     void printMap();

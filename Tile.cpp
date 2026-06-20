@@ -93,7 +93,7 @@ int Tile::getMovementCost(UnitType unitType) {
     if (this->unit != nullptr) {
         return -1; // Returns -1 if tile has unit
     }
-    if (this->building->getType() == BuildingType::City) {
+    if (this->building != nullptr && this->building->getType() == BuildingType::City) {
         return -2; // Returns -2 if tile has city
     }
     if (this->citystateOwner != nullptr && this->citystateOwner->getIsInWar()) {

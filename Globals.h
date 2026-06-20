@@ -50,7 +50,7 @@
 // Maps
 
 const std::map<TerrainType, std::string> terrain_icons = {
-    {TerrainType::Plains, "░"},
+    {TerrainType::Plains, "ᵥ"},
     {TerrainType::Mountains, "^"},
     {TerrainType::Rivers, "~"},
     {TerrainType::Forest, "♣"},

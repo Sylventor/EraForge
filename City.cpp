@@ -30,6 +30,7 @@ City::City(Game* game, Civilization* owner, int x, int y, std::string name) {
         }
     }
     game->getTile(x, y)->setBuilding(new Building(b_city));
+    game->getPlayer()->addCity(this);
 }
 
 std::vector<Tile*> const City::getOwnedTiles() {
@@ -93,7 +94,7 @@ void City::update() {
             newPopulation += building->getPopulationBonus();
             this->owner->addGold(building->getGoldBonus() * bonus);
             this->owner->addScience(building->getScienceBonus() * bonus);
-            if (building->getRequiredResource() <= Resource::Nothing && building->getType() == BuildingType::Production)
+            if (building->getRequiredResource() != Resource::Nothing && building->getType() == BuildingType::Production)
                 this->owner->addResource(building->getRequiredResource(), building->getResourceBonus() * bonus);
         }
     }

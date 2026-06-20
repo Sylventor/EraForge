@@ -58,22 +58,26 @@ void Game::clearMap() {
     }
 }
 
-Civilization* const Game::getPlayer() {
+Civilization* Game::getPlayer() const {
     return this->player;
 }
-Tile* const Game::getTile(int x, int y) {
-    return this->map[y][x];
+Tile* Game::getTile(int x, int y) const {
+    if (x < 0 || x >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y)
+    {
+        return nullptr;
+    }
+    return map[y][x];
 }
-MapView const Game::getMapView() {
+MapView Game::getMapView() const {
     return this->mapView;
 }
-int const Game::getSelectedTileX() {
+int Game::getSelectedTileX() const {
     return this->selectedTileX;
 }
-int const Game::getSelectedTileY() {
+int Game::getSelectedTileY() const {
     return this->selectedTileY;
 }
-Tile* const Game::getSelectedTile() {
+Tile* Game::getSelectedTile() const {
     return this->getTile(this->selectedTileX, this->selectedTileY);
 }
 
@@ -507,7 +511,7 @@ void Game::generateMap()
                     this->clearMap();
                     return this->generateMap();
                 }
-                Unit* startUnit = new Unit(u_warrior, ux, uy, this);
+                new Unit(u_warrior, ux, uy, this);
                 this->selectedTileX = x;
                 this->selectedTileY = y;
             }
@@ -571,6 +575,12 @@ void Game::showMainMenu() {
 void Game::startGame() {
     this->generateMap();
     while (true) {
+        for (City* city : this->player->getCities()) {
+            city->update();
+        }
+        for (Unit* unit : player->getUnits()) {
+            unit->update(this);
+        }
         this->playerTurn();
     }
 }
@@ -604,20 +614,25 @@ void Game::playerTurn() {
         std::getline(std::cin, action);
         if (action == "w") {
             this->moveSelect(0, -1);
-        } else if (action == "s") {
+        }
+        else if (action == "s") {
             this->moveSelect(0, 1);
-        } else if (action == "a") {
+        }
+        else if (action == "a") {
             this->moveSelect(-1, 0);
-        } else if (action == "d") {
+        }
+        else if (action == "d") {
             this->moveSelect(1, 0);
-        } else if (action == "p") {
+        }
+        else if (action == "p") {
             std::string choice;
             fmt::print(fg(COLOR2) | bg(COLOR4), "Are you sure you want to leave the game? (Y/n) >");
             std::getline(std::cin, choice);
             if (choice == "Y") {
                 exit(0);
             }
-        } else if (action == "m") {
+        }
+        else if (action == "m") {
             int choice;
             fmt::print(fg(COLOR2) | bg(COLOR4), "What view of map you want change to? (1 - Terrain, 2 - Politic, 3 - Units, 4 - Basic) >");
             std::cin >> choice;
@@ -636,7 +651,8 @@ void Game::playerTurn() {
                     break;
             }
             std::cin.ignore();
-        } else if (action == "r") {
+        }
+        else if (action == "r") {
             int choice;
             std::string text = "Research Menu";
 
@@ -732,6 +748,75 @@ void Game::playerTurn() {
                     counter++;
                 }
             } while (choice != 0);
+        }
+        else if (action == "e") {
+            Tile* t = this->getSelectedTile();
+            if (t->getUnit() != nullptr && t->getOwner() != nullptr) {
+                Unit* unit = t->getUnit();
+                std::string choice;
+                int result = 0;
+                do {
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Choose direction of move (w/a/s/d/0) >");
+                    std::getline(std::cin, choice);
+                    if (choice == "w") {
+                        result = unit->move(unit->getX(), unit->getY()-1, this);
+                    }
+                    else if (choice == "a") {
+                        result = unit->move(unit->getX()-1, unit->getY(), this);
+                    }
+                    else if (choice == "s") {
+                        result = unit->move(unit->getX(), unit->getY()+1, this);
+                    }
+                    else if (choice == "d") {
+                        result = unit->move(unit->getX()+1, unit->getY(), this);
+                    }
+                    if (result != 0) {
+                        if (result == 1) {
+                            break;
+                        }
+                        if (result == -1) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Tile is already occupied by unit!");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                        if (result == -2) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Tile has a city!");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                        if (result == -3) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "You can't go on territory of a citystate without declaring a war!");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                        if (result == -4) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Can't go on terrain of this type!");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                        if (result == -5) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Error! Can't check movement cost.");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                        if (result == -6) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Error! Distance is too big.");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                        if (result == -7) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Error! Can't find tile.");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                        if (result == -8) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Not enough movement point!");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            break;
+                        }
+                    }
+                } while (choice != "0");
+            }
         }
     } while (action != "0");
 }
