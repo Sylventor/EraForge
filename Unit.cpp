@@ -8,7 +8,7 @@
 #include "Tile.h"
 
 
-Unit::Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMovement, int range, UnitType type, int cost,
+Unit::Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMovement, int range, UnitType type, int cost, int researchCost,
            std::map<Resource, int> requiredResources, Building* requiredBuilding) {
     this->name = name;
     this->x = x;
@@ -20,6 +20,7 @@ Unit::Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMov
     this->movement = maxMovement;
     this->range = range;
     this->cost = cost;
+    this->researchCost = researchCost;
     this->type = type;
     this->requiredResources = requiredResources;
     this->requiredBuilding = requiredBuilding;
@@ -27,17 +28,17 @@ Unit::Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMov
 
 Unit::Unit(const Unit &unit) : name(unit.name), x(unit.x), y(unit.y), maxHealth(unit.maxHealth), health(unit.maxHealth),
                                damage(unit.damage), maxMovement(unit.maxMovement), movement(unit.maxMovement),
-                               range(unit.range), cost(unit.cost), type(unit.type), requiredResources(unit.requiredResources),
+                               range(unit.range), cost(unit.cost), researchCost(unit.researchCost), type(unit.type), requiredResources(unit.requiredResources),
                                requiredBuilding(unit.requiredBuilding) {}
 
 Unit::Unit(const Unit &unit, int x, int y, Game* game) : name(unit.name), x(x), y(y), maxHealth(unit.maxHealth), health(unit.maxHealth),
                                                    damage(unit.damage), maxMovement(unit.maxMovement), movement(unit.maxMovement),
-                                                   range(unit.range), cost(unit.cost), type(unit.type), requiredResources(unit.requiredResources),
+                                                   range(unit.range), cost(unit.cost), researchCost(unit.researchCost), type(unit.type), requiredResources(unit.requiredResources),
                                                    requiredBuilding(unit.requiredBuilding) {
     game->getTile(x, y)->setUnit(this);
     for (int nx = -2; nx <= 2; nx++) {
         for (int ny = -2; ny <= 2; ny++) {
-            if (x+nx > 0 && x+nx < MAP_SIZE_X && y+ny > 0 && y+ny < MAP_SIZE_Y) {
+            if (x+nx >= 0 && x+nx < MAP_SIZE_X && y+ny >= 0 && y+ny < MAP_SIZE_Y) {
                 Tile* t = game->getTile(x+nx, y+ny);
                 t->setRevealed(true);
             }
@@ -46,43 +47,46 @@ Unit::Unit(const Unit &unit, int x, int y, Game* game) : name(unit.name), x(x), 
     game->getPlayer()->addUnit(this);
 }
 
-std::string const Unit::getName() {
+std::string Unit::getName() const{
     return name;
 }
-int const Unit::getX() {
+int Unit::getX() const{
     return x;
 }
-int const Unit::getY() {
+int Unit::getY() const{
     return y;
 }
-int const Unit::getMaxHealth() {
+int Unit::getMaxHealth() const{
     return maxHealth;
 }
-int const Unit::getHealth() {
+int Unit::getHealth() const{
     return health;
 }
-int const Unit::getDamage() {
+int Unit::getDamage() const{
     return damage;
 }
-int const Unit::getMaxMovement() {
+int Unit::getMaxMovement() const{
     return maxMovement;
 }
-int const Unit::getMovement() {
+int Unit::getMovement() const{
     return movement;
 }
-int const Unit::getRange() {
+int Unit::getRange() const{
     return range;
 }
-int const Unit::getCost() {
+int Unit::getCost() const{
     return cost;
 }
-UnitType const Unit::getType() {
+int Unit::getResearchCost() const {
+    return researchCost;
+}
+UnitType Unit::getType() const{
     return type;
 }
-std::map<Resource, int> const Unit::getRequiredResources() {
+std::map<Resource, int> Unit::getRequiredResources() const{
     return requiredResources;
 }
-Building* const Unit::getRequiredBuilding() {
+Building* Unit::getRequiredBuilding() const{
     return requiredBuilding;
 }
 
@@ -111,7 +115,7 @@ void Unit::move(int x, int y, Game* game) {
 
     for (int nx = -2; nx <= 2; nx++) {
         for (int ny = -2; ny <= 2; ny++) {
-            if (x+nx > 0 && x+nx < MAP_SIZE_X && y+ny > 0 && y+ny < MAP_SIZE_Y) {
+            if (x+nx >= 0 && x+nx < MAP_SIZE_X && y+ny >= 0 && y+ny < MAP_SIZE_Y) {
                 Tile* t = game->getTile(x+nx, y+ny);
                 t->setRevealed(true);
             }

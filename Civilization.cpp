@@ -8,7 +8,7 @@
 
 Civilization::Civilization(int startGold, std::vector<Building*> startResearchedBuildings, std::vector<Unit*> startResearchedUnits) {
     this->gold = startGold;
-    this->science = 0;
+    this->science = 1000;
     this->researchedBuildings = startResearchedBuildings;
     this->researchedUnits = startResearchedUnits;
 }

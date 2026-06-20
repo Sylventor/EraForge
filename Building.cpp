@@ -6,7 +6,7 @@
 
 
 Building::Building(std::string name, std::string icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus,
-                   int scienceBonus, int resourceBonus, int cost, Resource requiredResource,
+                   int scienceBonus, int resourceBonus, int cost, int researchCost, Resource requiredResource,
                    std::vector<TerrainType> requiredTerrain) {
     this->name = name;
     this->icon = icon;
@@ -17,6 +17,7 @@ Building::Building(std::string name, std::string icon, BuildingType type, int fo
     this->populationBonus = populationBonus;
     this->resourceBonus = resourceBonus;
     this->cost = cost;
+    this->researchCost = researchCost;
     this->requiredResource = requiredResource;
     this->requiredTerrain = requiredTerrain;
 }
@@ -25,42 +26,47 @@ Building::Building(const Building &building) : name(building.name), icon(buildin
                                                foodBonus(building.foodBonus), goldBonus(building.goldBonus),
                                                populationBonus(building.populationBonus),
                                                scienceBonus(building.scienceBonus),
-                                               resourceBonus(building.scienceBonus),
-                                               requiredTerrain(building.requiredTerrain) {
+                                               resourceBonus(building.resourceBonus),
+                                               requiredTerrain(building.requiredTerrain),
+                                               requiredResource(building.requiredResource), cost(building.cost),
+                                               researchCost(building.researchCost) {
 }
 
-std::string const Building::getName() {
+std::string Building::getName() const {
     return name;
 }
-std::string const Building::getIcon() {
+std::string Building::getIcon() const {
     return icon;
 }
-BuildingType const Building::getType() {
+BuildingType Building::getType() const {
     return type;
 }
-int const Building::getFoodBonus() {
+int Building::getFoodBonus() const {
     return foodBonus;
 }
-int const Building::getGoldBonus() {
+int Building::getGoldBonus() const {
     return goldBonus;
 }
-int const Building::getPopulationBonus() {
+int Building::getPopulationBonus() const {
     return populationBonus;
 }
-int const Building::getScienceBonus() {
+int Building::getScienceBonus() const {
     return scienceBonus;
 }
-int const Building::getResourceBonus() {
+int Building::getResourceBonus() const {
     return resourceBonus;
 }
-Resource const Building::getRequiredResource() {
+Resource Building::getRequiredResource() const {
     return requiredResource;
 }
-std::vector<TerrainType> const Building::getRequiredTerrain() {
+std::vector<TerrainType> Building::getRequiredTerrain() const {
     return requiredTerrain;
 }
-int const Building::getCost() {
+int Building::getCost() const {
     return cost;
+}
+int Building::getResearchCost() const {
+    return researchCost;
 }
 
 

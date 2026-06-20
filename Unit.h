@@ -25,30 +25,32 @@ private:
     int maxMovement;
     int range;
     int cost;
+    int researchCost;
     UnitType type;
     std::map<Resource, int> requiredResources;
     Building* requiredBuilding;
 public:
-    Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMovement, int range, UnitType type, int cost,
+    Unit(std::string name, int x, int y, int maxHealth, int damage, int maxMovement, int range, UnitType type, int cost, int researchCost,
          std::map<Resource, int> requiredResources, Building* requiredBuilding);
 
     Unit(const Unit &unit);
 
     Unit(const Unit &unit, int x, int y, Game* game);
 
-    std::string const getName();
-    int const getX();
-    int const getY();
-    int const getHealth();
-    int const getMaxHealth();
-    int const getDamage();
-    int const getMovement();
-    int const getMaxMovement();
-    int const getRange();
-    int const getCost();
-    UnitType const getType();
-    std::map<Resource, int> const getRequiredResources();
-    Building* const getRequiredBuilding();
+    std::string getName() const;
+    int getX() const;
+    int getY() const;
+    int getHealth() const;
+    int getMaxHealth() const;
+    int getDamage() const;
+    int getMovement() const;
+    int getMaxMovement() const;
+    int getRange() const;
+    int getCost() const;
+    int getResearchCost() const;
+    UnitType getType() const;
+    std::map<Resource, int> getRequiredResources() const;
+    Building* getRequiredBuilding() const;
 
     void move(int x, int y, Game* game);
     void attack(int x, int y, Game* game);

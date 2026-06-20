@@ -13,6 +13,8 @@
 #include <thread>
 #include <chrono>
 #include <string>
+#include <iomanip>
+
 
 #include "Game.h"
 
@@ -40,7 +42,7 @@ static bool isWater(Tile* t) {
 Game::Game() {
     this->selectedTileX = 0;
     this->selectedTileY = 0;
-    this->player = new Civilization(300, {new Building(b_farm)}, {new Unit(u_warrior)});
+    this->player = new Civilization(300, {new Building(b_city), new Building(b_farm)}, {new Unit(u_warrior)});
     this->mapView = MapView::Base;
     this->generateMap();
 }
@@ -514,7 +516,7 @@ void Game::generateMap()
 }
 
 void Game::showMainMenu() {
-    int choise;
+    int choice;
     do {
         clearScreen();
         fmt::print(fg(COLOR1), R"(
@@ -536,22 +538,22 @@ void Game::showMainMenu() {
 0 | Exit
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 > )");
-        std::cin >> choise;
+        std::cin >> choice;
         if (std::cin.fail()) {
             fmt::print(fg(COLOR1), "Ошибка: введите число!\n");
 
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            choise = -1;
+            choice = -1;
         }
-        else if (choise < 0 || choise > 2)
+        else if (choice < 0 || choice > 2)
         {
             fmt::print(fg(COLOR1), "Ошибка: введите 0-2\n");
-            choise = -1;
+            choice = -1;
         }
         std::this_thread::sleep_for(std::chrono::seconds(1));
-    } while (choise == -1 || choise == 2);
-    switch (choise) {
+    } while (choice == -1 || choice == 2);
+    switch (choice) {
         case 0:
             exit(0);
             break;
@@ -598,7 +600,7 @@ void Game::playerTurn() {
         printStats();
         this->printMap();
         printSelectedTile();
-        fmt::print(fg(COLOR2) | bg(COLOR4), "Choose your aciton (Type \"c\" to see controls list) > ");
+        fmt::print(fg(COLOR2) | bg(COLOR4), "Choose your aciton (Type \"c\" to see controls list) >");
         std::getline(std::cin, action);
         if (action == "w") {
             this->moveSelect(0, -1);
@@ -608,16 +610,16 @@ void Game::playerTurn() {
             this->moveSelect(-1, 0);
         } else if (action == "d") {
             this->moveSelect(1, 0);
-        } else if (action == "q") {
+        } else if (action == "p") {
             std::string choice;
-            fmt::print(fg(COLOR2) | bg(COLOR4), "Are you sure you want to leave the game? (Y/n) > ");
+            fmt::print(fg(COLOR2) | bg(COLOR4), "Are you sure you want to leave the game? (Y/n) >");
             std::getline(std::cin, choice);
             if (choice == "Y") {
                 exit(0);
             }
         } else if (action == "m") {
             int choice;
-            fmt::print(fg(COLOR2) | bg(COLOR4), "What view of map you want change to? (1 - Terrain, 2 - Politic, 3 - Units, 4 - Basic) > ");
+            fmt::print(fg(COLOR2) | bg(COLOR4), "What view of map you want change to? (1 - Terrain, 2 - Politic, 3 - Units, 4 - Basic) >");
             std::cin >> choice;
             switch (choice) {
                 case 1:
@@ -634,6 +636,102 @@ void Game::playerTurn() {
                     break;
             }
             std::cin.ignore();
+        } else if (action == "r") {
+            int choice;
+            std::string text = "Research Menu";
+
+            int width = MAP_SIZE_X * 3;
+            int padding = (width - text.size()) / 2;
+
+            text.insert(0, padding, ' ');
+            text.append(width - text.size(), ' ');
+            clearScreen();
+            fmt::print(fg(COLOR2) | bg(COLOR4), "{}\n", text);
+            this->printResearchTable();
+            do {
+                fmt::print(fg(COLOR2) | bg(COLOR4), "Enter number of building/unit you want to research or leave this menu using 0 >");
+                std::cin >> choice;
+                if (std::cin.fail()) {
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Error: enter a number!\n");
+
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    choice = -1;
+                    continue;
+                }
+                if (choice < 0 || choice > u_list.size() + b_list.size() - this->player->getResearchedUnits().size() - this->player->getResearchedBuildings().size()) {
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Error: enter a number between 0 and {}!\n", u_list.size() + b_list.size() - this->player->getResearchedBuildings().size() - this->player->getResearchedUnits().size());
+                    continue;
+                }
+
+                int counter = 1;
+                bool isFound = false;
+
+                for (int i = 0; i < b_list.size(); i++)
+                {
+                    bool isResearched = false;
+
+                    for (Building* researched : player->getResearchedBuildings())
+                    {
+                        if (researched->getName() == b_list[i].getName())
+                        {
+                            isResearched = true;
+                            break;
+                        }
+                    }
+
+                    if (isResearched) {
+                        continue;
+                    }
+
+                    if (counter == choice)
+                    {
+                        Building* building = new Building(b_list[i]);
+                        if (this->player->researchBuilding(building, building->getResearchCost())) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Building researched!\n");
+                            choice = 0;
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                        } else {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Not enough science!\n");
+                        }
+                        isFound = true;
+                        break;
+                    }
+
+                    counter++;
+                }
+                for (int i = 0; i < u_list.size() && !isFound; i++)
+                {
+                    bool isResearched = false;
+
+                    for (Unit* researched : player->getResearchedUnits())
+                    {
+                        if (researched->getName() == u_list[i].getName())
+                        {
+                            isResearched = true;
+                            break;
+                        }
+                    }
+
+                    if (isResearched)
+                        continue;
+
+                    if (counter == choice)
+                    {
+                        Unit* unit = new Unit(u_list[i]);
+                        if (this->player->researchUnit(unit, unit->getResearchCost())) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Unit researched!\n");
+                            choice = 0;
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                        } else {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "Not enough science!\n");
+                        }
+                        break;
+                    }
+
+                    counter++;
+                }
+            } while (choice != 0);
         }
     } while (action != "0");
 }
@@ -655,4 +753,195 @@ void Game::moveSelect(int dx, int dy) {
     } else if (ny >= MAP_SIZE_Y) {
         this->selectedTileY = 0;
     }
+}
+
+void Game::printResearchTable()
+{
+    int counter = 1;
+
+    int tableWidth = MAP_SIZE_X * 3;
+
+    int w_name = 14;
+    int w_type = 12;
+    int w_num = 10;
+    int w_cost = 13;
+    int w_res = 12;
+    int w_research = 10;
+    int w_req_res = 8;
+    int used = w_name + w_type + w_num * 5 + w_cost + w_res + w_research + w_req_res + 12;
+    int w_terr = std::max(10, tableWidth - used);
+
+    auto cut = [](const std::string& s, int w) -> std::string
+    {
+        if (w <= 1) return std::string("…");
+        if ((int)s.size() <= w) return s;
+        return s.substr(0, w - 1) + "…";
+    };
+
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{}\n", std::string(tableWidth, '-'));
+    fmt::print(fg(COLOR2) | bg(COLOR4), "   | {:<{}} | {:<{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:<{}} |\n",
+    "Name", w_name,
+    "Type", w_type,
+    "Food", w_num,
+    "Gold", w_num,
+    "Population",  w_num,
+    "Sciecne",  w_num,
+    "Resource",  w_num,
+    "Science Cost", w_cost,
+    "Req. res", w_req_res,
+    "Terrain", w_terr
+    );
+
+    for (const auto& b : b_list)
+    {
+        std::string terrainStr;
+
+        for (auto t : b.getRequiredTerrain())
+            terrainStr += terrain_icons.at(t) + " ";
+
+        std::string b_type = "Unknown";
+
+        switch (b.getType()) {
+            case BuildingType::City:
+                continue;
+            case BuildingType::Economy:
+                b_type = "Economy";
+                break;
+            case BuildingType::Production:
+                b_type = "Production";
+                break;
+            case BuildingType::Military:
+                b_type = "Military";
+                break;
+            case BuildingType::Science:
+                b_type = "Science";
+                break;
+            default:
+                break;
+        }
+
+        bool isResearched = false;
+        for (Building* researched_building : this->player->getResearchedBuildings()) {
+            if (researched_building->getName() == b.getName()) {
+                isResearched = true;
+                break;
+            }
+        }
+        if (isResearched) {
+            continue;
+        }
+
+        fmt::print(
+            fg(COLOR2) | bg(COLOR4), "{:<2} | {:<{}} | {:<{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:<{}} |\n",
+            counter,
+            cut(b.getName(), w_name), w_name,
+            cut(b_type, w_type), w_type,
+
+            b.getFoodBonus(), w_num,
+            b.getGoldBonus(), w_num,
+            b.getPopulationBonus(), w_num,
+            b.getScienceBonus(), w_num,
+            b.getResourceBonus(), w_num,
+
+            b.getResearchCost(), w_cost,
+            resource_names.at(b.getRequiredResource()), w_req_res,
+            cut(terrainStr, w_terr), w_terr
+        );
+        counter++;
+    }
+
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{}\n", std::string(tableWidth, '-'));
+
+    auto formatResources = [](const std::map<Resource, int>& req) -> std::string
+    {
+        std::string res;
+        for (auto& [r, v] : req)
+        {
+            if (v <= 0) continue;
+            res += resource_names.at(r) + ":" + std::to_string(v) + " ";
+        }
+        if (res.empty()) return " ";
+        return res;
+    };
+
+
+    fmt::print(fg(COLOR2) | bg(COLOR4),
+"   | {:<{}} | {:<{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:<{}} | {:<{}} |\n",
+    "Name", w_name,
+    "Type", w_type,
+    "HP", w_num,
+    "Damage", w_num,
+    "Movement", w_num,
+    "Range", w_num,
+    "Science cost", w_cost,
+    "Req.Building", w_res,
+    "Req.Resources", w_terr + 9
+    );
+
+    for (const auto& u : u_list)
+    {
+        std::string u_type;
+
+        switch (u.getType())
+        {
+            case UnitType::Melee:
+                u_type = "Melee";
+                break;
+            case UnitType::Ranged:
+                u_type = "Ranged";
+                break;
+            case UnitType::Cavalry:
+                u_type = "Cavlary";
+                break;
+            case UnitType::AntiCavalry:
+                u_type = "AntiCavlary";
+                break;
+            case UnitType::Siege:
+                u_type = "Siege";
+                break;
+            case UnitType::Naval:
+                u_type = "Naval";
+                break;
+            default:
+                u_type = "Unknown";
+                break;
+        }
+
+        bool isResearched = false;
+        for (Unit* researched_unit : this->player->getResearchedUnits()) {
+            if (researched_unit->getName() == u.getName()) {
+                isResearched = true;
+                break;
+            }
+        }
+        if (isResearched) {
+            continue;
+        }
+
+        std::string reqRes = formatResources(u.getRequiredResources());
+
+        std::string reqBuild = u.getRequiredBuilding()
+            ? u.getRequiredBuilding()->getName()
+            : " ";
+
+        fmt::print(fg(COLOR2) | bg(COLOR4),
+            "{:<2} | {:<{}} | {:<{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:>{}} | {:<{}} | {:<{}} |\n",
+
+            counter,
+            cut(u.getName(), w_name), w_name,
+            cut(u_type, w_type), w_type,
+
+            u.getMaxHealth(), w_num,
+            u.getDamage(), w_num,
+            u.getMaxMovement(), w_num,
+            u.getRange(), w_num,
+
+            u.getResearchCost(), w_cost,
+            cut(reqBuild, w_res), w_res,
+            cut(reqRes, w_terr), w_terr+9
+        );
+        counter++;
+    }
+
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{}\n", std::string(tableWidth, '-'));
 }

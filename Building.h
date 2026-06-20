@@ -20,23 +20,25 @@ private:
     int scienceBonus;
     int resourceBonus;
     int cost;
+    int researchCost;
     Resource requiredResource;
     std::vector<TerrainType> requiredTerrain;
 public:
-    Building(std::string name, std::string icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus, int scienceBonus, int resourceBonus, int cost, Resource requiredResource, std::vector<TerrainType> requiredTerrain);
+    Building(std::string name, std::string icon, BuildingType type, int foodBonus, int goldBonus, int populationBonus, int scienceBonus, int resourceBonus, int cost, int researchCost, Resource requiredResource, std::vector<TerrainType> requiredTerrain);
     Building(const Building& building);
 
-    std::string const getName();
-    std::string const getIcon();
-    BuildingType const getType();
-    int const getFoodBonus();
-    int const getGoldBonus();
-    int const getPopulationBonus();
-    int const getScienceBonus();
-    int const getResourceBonus();
-    int const getCost();
-    Resource const getRequiredResource();
-    std::vector<TerrainType> const getRequiredTerrain();
+    std::string getName() const;
+    std::string getIcon() const;
+    BuildingType getType() const;
+    int getFoodBonus() const;
+    int getGoldBonus() const;
+    int getPopulationBonus() const;
+    int getScienceBonus() const;
+    int getResourceBonus() const;
+    int getCost() const;
+    int getResearchCost() const;
+    Resource getRequiredResource() const;
+    std::vector<TerrainType> getRequiredTerrain() const;
 
     void upgrade();
 };

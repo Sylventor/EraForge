@@ -35,6 +35,7 @@ public:
     void printMap();
     void printSelectedTile();
     void printStats();
+    void printResearchTable();
     void generateMap();
     void startGame();
     void playerTurn();

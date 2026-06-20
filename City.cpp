@@ -21,7 +21,7 @@ City::City(Game* game, Civilization* owner, int x, int y, std::string name) {
     this->health = maxHealth;
     for (int nx = -2; nx <= 2; nx++) {
         for (int ny = -2; ny <= 2; ny++) {
-            if (x+nx > 0 && x+nx < MAP_SIZE_X && y+ny > 0 && y+ny < MAP_SIZE_Y) {
+            if (x+nx >= 0 && x+nx < MAP_SIZE_X && y+ny >= 0 && y+ny < MAP_SIZE_Y) {
                Tile* t = game->getTile(x+nx, y+ny);
                ownedTiles.push_back(t);
                t->setOwner(this);
