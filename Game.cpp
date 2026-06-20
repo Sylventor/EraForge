@@ -42,7 +42,7 @@ static bool isWater(Tile* t) {
 Game::Game() {
     this->selectedTileX = 0;
     this->selectedTileY = 0;
-    this->player = new Civilization(300, {new Building(b_farm)}, {new Unit(u_warrior)});
+    this->player = new Civilization(40, {new Building(b_farm)}, {new Unit(u_warrior)});
     this->mapView = MapView::Base;
 }
 
@@ -492,7 +492,7 @@ void Game::generateMap()
         if (map[y][x]->getTerrain() == TerrainType::Rivers) {
             int roll = rand() % 100;
             if (roll < 10) {
-                city = new City(this, player, x, y, "Test");
+                city = new City(this, player, x, y);
                 int ux = -1;
                 int uy = -1;
                 for (int nx = -1; nx <= 1; nx++) {
@@ -959,6 +959,50 @@ void Game::playerTurn() {
             } else {
                 fmt::print(fg(COLOR2) | bg(COLOR4), "Can't spawn units on foreign territory\n");
                 std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+        }
+        else if (action == "b") {
+            Tile* t = this->getSelectedTile();
+            bool canBuildCity = true;
+            for (int nx = -2; nx <= 2; nx++) {
+                for (int ny = -2; ny <= 2; ny++) {
+                    if (this->getSelectedTileX()+nx >= 0 && this->getSelectedTileX()+nx < MAP_SIZE_X && this->getSelectedTileY()+ny >= 0 && this->getSelectedTileY()+ny < MAP_SIZE_Y) {
+                        if (t->getOwner() != nullptr || t->getCitystateOwner() != nullptr) {
+                            canBuildCity = false;
+                        }
+                    }
+                }
+            }
+            if (!canBuildCity) {
+                fmt::print(fg(COLOR2) | bg(COLOR4), "Can't place city here, it is too close to another city!\n");
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                continue;
+            }
+
+            if (this->player->getGold() < b_city.getCost()) {
+                fmt::print(fg(COLOR2) | bg(COLOR4), "You need at least {} gold to place a city!\n", b_city.getCost());
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                continue;
+            }
+
+            bool isTerrainSuitable = false;
+            for (TerrainType terr : b_city.getRequiredTerrain()) {
+                if (terr == t->getTerrain()) {
+                    isTerrainSuitable = true;
+                    break;
+                }
+            }
+            if (!isTerrainSuitable && !t->getRevealed()) {
+                fmt::print(fg(COLOR2) | bg(COLOR4), "You can't place a city here!\n", b_city.getCost());
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                continue;
+            }
+
+            std::string choice;
+            fmt::print(fg(COLOR2) | bg(COLOR4), "Are you sure you want to place a new city here? (Y/n) >");
+            std::getline(std::cin, choice);
+            if (choice == "Y") {
+                new City(this, this->player, this->selectedTileX, this->selectedTileY);
             }
         }
     } while (action != "0");

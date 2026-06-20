@@ -9,11 +9,11 @@
 #include "Civilization.h"
 #include "Game.h"
 
-City::City(Game* game, Civilization* owner, int x, int y, std::string name) {
+City::City(Game* game, Civilization* owner, int x, int y) {
     this->owner = owner;
     this->x = x;
     this->y = y;
-    this->name = name;
+    this->name = CITY_NAMES[rand() % CITY_NAMES.size()];
     this->population = 3;
     this->populationForUpgrade = 6;
     this->food = 3;

@@ -24,7 +24,7 @@ private:
     int x;
     int y;
 public:
-    City(Game* game, Civilization* owner, int x, int y, std::string name);
+    City(Game* game, Civilization* owner, int x, int y);
 
     std::vector<Tile*> const getOwnedTiles();
     std::string const getName();
