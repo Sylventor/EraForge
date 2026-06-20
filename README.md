@@ -15,7 +15,7 @@ EraForge — це стратегія-пісочниця, натхненна Sid 
 
 ### g++ (Linux / macOS / MinGW)
 ```bash
-git clone <repo>
+git clone https://github.com/Sylventor/EraForge
 cd EraForge
 
 cmake -B build
