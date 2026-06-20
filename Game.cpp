@@ -555,17 +555,16 @@ void Game::showMainMenu() {
             choice = -1;
         }
         std::this_thread::sleep_for(std::chrono::seconds(1));
-    } while (choice == -1 || choice == 2);
+    } while (choice == -1);
     switch (choice) {
         case 0:
             exit(0);
-            break;
         case 1:
             this->startGame();
             break;
         case 2:
             this->printControls();
-            break;
+            return this->showMainMenu();
         default:
             break;
     }
@@ -600,7 +599,29 @@ void Game::printStats() {
     fmt::print(bg(COLOR4), "{}\n", std::string(MAP_SIZE_X*3 + 1 - printed, ' '));
 }
 
-void Game::printControls() {}
+void Game::printControls() {
+    clearScreen();
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:^150}\n", "Controls");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{}\n", std::string(150, '-'));
+
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " w | Move select up");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " s | Move select down");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " a | Move select left");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " d | Move select right");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " p | Leave the game");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " m | Change map view");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " r | Open research menu");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " e | Move unit");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " q | Build");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " f | Spawn new unit");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " b | Build new city");
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{:<150}\n", " 0 | End turn");
+
+    fmt::print(fg(COLOR2) | bg(COLOR4), "{}\n", std::string(150, '-'));
+
+    int i;
+    std::cin >> i;
+}
 
 void Game::playerTurn() {
     std::string action;
@@ -611,7 +632,10 @@ void Game::playerTurn() {
         printSelectedTile();
         fmt::print(fg(COLOR2) | bg(COLOR4), "Choose your aciton (Type \"c\" to see controls list) >");
         std::getline(std::cin, action);
-        if (action == "w") {
+        if (action == "c") {
+            this->printControls();
+        }
+        else if (action == "w") {
             this->moveSelect(0, -1);
         }
         else if (action == "s") {

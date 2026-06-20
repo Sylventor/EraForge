@@ -250,7 +250,7 @@ static Building b_library{
 static Building b_temple{
     "Temple","T",BuildingType::Science,
     1,0,1,3,0,
-    100,60,
+    100,30,
     Resource::Nothing,
     {TerrainType::Plains, TerrainType::Forest, TerrainType::Desert, TerrainType::Rivers}
 };
@@ -321,25 +321,25 @@ static Building b_castle{
 static std::vector<Building> b_list{b_farm, b_granary, b_aqueduct, b_lumber, b_sawmill, b_mine, b_quarry, b_forge, b_workshop, b_factory, b_factory_d, b_market, b_trading, b_bank, b_stock, b_port, b_harbor, b_library, b_temple, b_university, b_observatory, b_lab, b_academy, b_barracks, b_armory, b_stable, b_watchtower, b_castle};
 
 static Unit u_warrior{"Warrior",-1,-1,100,10,2,1,UnitType::Melee,50,10,{{Resource::Nothing,0}},nullptr};
-static Unit u_spearman{"Spearman",-1,-1,110,12,2,1,UnitType::AntiCavalry,70,20,{{Resource::Iron,1}},nullptr};
+static Unit u_spearman{"Spearman",-1,-1,110,12,2,1,UnitType::AntiCavalry,70,20,{{Resource::Iron,10}},nullptr};
 static Unit u_archer{"Archer",-1,-1,80,15,2,2,UnitType::Ranged,80,25,{{Resource::Nothing,0}},nullptr};
-static Unit u_horse{"Horseman",-1,-1,120,18,4,1,UnitType::Cavalry,140,60,{{Resource::Horses,1}},nullptr};
-static Unit u_knight{"Knight",-1,-1,180,25,4,1,UnitType::Cavalry,240,120,{{Resource::Horses,2}},nullptr};
-static Unit u_catapult{"Catapult",-1,-1,70,30,2,3,UnitType::Siege,180,90,{{Resource::Rocks,1}},&b_workshop};
-static Unit u_trebuchet{"Trebuchet",-1,-1,80,40,2,4,UnitType::Siege,280,160,{{Resource::Rocks,2}},&b_factory};
-static Unit u_swords{"Swordsman",-1,-1,140,20,2,1,UnitType::Melee,120,40,{{Resource::Iron,1}},&b_barracks};
-static Unit u_pike{"Pikeman",-1,-1,130,18,2,1,UnitType::AntiCavalry,110,35,{{Resource::Iron,1}},&b_barracks};
+static Unit u_horse{"Horseman",-1,-1,120,18,4,1,UnitType::Cavalry,140,60,{{Resource::Horses,30}},nullptr};
+static Unit u_knight{"Knight",-1,-1,180,25,4,1,UnitType::Cavalry,240,120,{{Resource::Horses,40}},nullptr};
+static Unit u_catapult{"Catapult",-1,-1,70,30,2,3,UnitType::Siege,180,90,{{Resource::Rocks,20}},&b_workshop};
+static Unit u_trebuchet{"Trebuchet",-1,-1,80,40,2,4,UnitType::Siege,280,160,{{Resource::Rocks,30}},&b_factory};
+static Unit u_swords{"Swordsman",-1,-1,140,20,2,1,UnitType::Melee,120,40,{{Resource::Iron,15}},&b_barracks};
+static Unit u_pike{"Pikeman",-1,-1,130,18,2,1,UnitType::AntiCavalry,110,35,{{Resource::Iron,18}},&b_barracks};
 static Unit u_cross{"Crossbow",-1,-1,90,22,2,2,UnitType::Ranged,130,50,{{Resource::Nothing,0}},&b_market};
 static Unit u_longbow{"Longbow",-1,-1,100,26,2,3,UnitType::Ranged,170,70,{{Resource::Nothing,0}},&b_market};
-static Unit u_cannon{"Cannon",-1,-1,120,45,2,3,UnitType::Siege,360,180,{{Resource::Coal,1}},&b_factory};
-static Unit u_tank{"Tank",-1,-1,300,60,3,1,UnitType::Melee,600,350,{{Resource::Coal,2}},&b_factory_d};
-static Unit u_infantry{"Infantry",-1,-1,200,30,3,1,UnitType::Melee,220,120,{{Resource::Iron,1}},&b_barracks};
+static Unit u_cannon{"Cannon",-1,-1,120,45,2,3,UnitType::Siege,360,180,{{Resource::Coal,30}},&b_factory};
+static Unit u_tank{"Tank",-1,-1,300,60,3,1,UnitType::Melee,600,350,{{Resource::Coal,90}},&b_factory_d};
+static Unit u_infantry{"Infantry",-1,-1,200,30,3,1,UnitType::Melee,220,120,{{Resource::Iron,30}},&b_barracks};
 static Unit u_marine{"Marine",-1,-1,160,28,3,1,UnitType::Naval,200,90,{{Resource::Nothing,0}},&b_port};
-static Unit u_destroyer{"Destroyer",-1,-1,220,40,4,2,UnitType::Naval,420,220,{{Resource::Coal,1}},&b_harbor};
-static Unit u_sub{"Submarine",-1,-1,180,35,4,1,UnitType::Naval,380,200,{{Resource::Coal,1}},&b_harbor};
-static Unit u_scout{"Scout",-1,-1,60,5,5,1,UnitType::Melee,30,5,{{Resource::Nothing,0}},nullptr};
-static Unit u_art{"Artillery",-1,-1,100,50,2,4,UnitType::Siege,450,250,{{Resource::Coal,2}},&b_factory_d};
-static Unit u_heli{"Helicopter",-1,-1,180,40,5,2,UnitType::Cavalry,520,300,{{Resource::Coal,2}},&b_factory_d};
+static Unit u_destroyer{"Destroyer",-1,-1,220,40,4,2,UnitType::Naval,420,220,{{Resource::Coal,90}},&b_harbor};
+static Unit u_sub{"Submarine",-1,-1,180,35,4,1,UnitType::Naval,380,200,{{Resource::Coal,130}},&b_harbor};
+static Unit u_scout{"Scout",-1,-1,60,5,5,1,UnitType::Melee,40,10,{{Resource::Nothing,0}},nullptr};
+static Unit u_art{"Artillery",-1,-1,100,50,2,4,UnitType::Siege,450,250,{{Resource::Coal,250}},&b_factory_d};
+static Unit u_heli{"Helicopter",-1,-1,180,40,5,2,UnitType::Cavalry,520,300,{{Resource::Coal,200}},&b_factory_d};
 
 static std::vector<Unit> u_list = {u_warrior, u_spearman, u_archer, u_horse, u_knight, u_catapult, u_trebuchet, u_swords, u_pike, u_cross, u_longbow, u_cannon, u_tank, u_marine, u_destroyer, u_sub, u_scout, u_art, u_heli};
 
