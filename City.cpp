@@ -77,11 +77,11 @@ void City::repair(int health) {
 
 void City::update() {
     int newFood = 0;
-    int newPopulation = 0;
+    int newPopulation = 3;
     double bonus = 1;
 
     if (this->food < this->population) {
-        bonus = 1/(food - population);
+        bonus = 1/abs(food - population);
     }
     if (this->food >= this->population*2) {
         bonus = 1.5;
@@ -94,8 +94,9 @@ void City::update() {
             newPopulation += building->getPopulationBonus();
             this->owner->addGold(building->getGoldBonus() * bonus);
             this->owner->addScience(building->getScienceBonus() * bonus);
-            if (building->getRequiredResource() != Resource::Nothing && building->getType() == BuildingType::Production)
+            if (building->getRequiredResource() != Resource::Nothing && ( building->getType() == BuildingType::Production || building->getType() == BuildingType::Military)) {
                 this->owner->addResource(building->getRequiredResource(), building->getResourceBonus() * bonus);
+            }
         }
     }
 

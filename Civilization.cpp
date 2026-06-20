@@ -60,8 +60,12 @@ void Civilization::addScience(int amount) {
 void Civilization::addCity(City* city) {
     this->cities.push_back(city);
 }
-void Civilization::addResource(Resource resource, int amount) {
-    this->resources[resource] += amount;
+void Civilization::addResource(Resource resource, int amount)
+{
+    if (resource == Resource::Nothing)
+        return;
+
+    resources[resource] += amount;
 }
 void Civilization::addUnit(Unit* unit) {
     this->units.push_back(unit);
@@ -81,12 +85,20 @@ void Civilization::removeScience(int amount) {
         this->science = 0;
     }
 }
-void Civilization::removeResource(Resource resource, int amount) {
-    if (this->resources[resource] > amount) {
-        this->resources[resource] -= amount;
-    } else {
-        this->resources[resource] = 0;
-    }
+void Civilization::removeResource(Resource resource, int amount)
+{
+    if (resource == Resource::Nothing)
+        return;
+
+    auto it = resources.find(resource);
+
+    if (it == resources.end())
+        return;
+
+    it->second -= amount;
+
+    if (it->second <= 0)
+        resources.erase(it);
 }
 void Civilization::removeCity(int index) {
     delete cities[index];

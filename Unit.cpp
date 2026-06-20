@@ -40,6 +40,15 @@ Unit::Unit(const Unit &unit, int x, int y, Game* game) : name(unit.name), x(x), 
     game->getPlayer()->addUnit(this);
 }
 
+Unit::Unit(const Unit* unit, int x, int y, Game* game) : name(unit->name), x(x), y(y), maxHealth(unit->maxHealth), health(unit->maxHealth),
+                                                   damage(unit->damage), maxMovement(unit->maxMovement), movement(unit->maxMovement),
+                                                   range(unit->range), cost(unit->cost), researchCost(unit->researchCost), type(unit->type), requiredResources(unit->requiredResources),
+                                                   requiredBuilding(unit->requiredBuilding) {
+    game->getTile(x, y)->setUnit(this);
+    this->revealMap(game);
+    game->getPlayer()->addUnit(this);
+}
+
 std::string Unit::getName() const{
     return name;
 }

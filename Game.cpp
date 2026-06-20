@@ -8,7 +8,7 @@
 #include <queue>
 #include <vector>
 #include <cstdlib>
-#include <ctime>
+#include <map>
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -586,15 +586,15 @@ void Game::startGame() {
 
 void Game::printStats() {
     fmt::print(fg(COLOR_GOLD) | bg(COLOR4),"o Gold: {} ", this->player->getGold());
-    fmt::print(fg(COLOR_SCIENCE) | bg(COLOR4), "Δ Science: {}", this->player->getScience());
+    fmt::print(fg(COLOR_SCIENCE) | bg(COLOR4), "Δ Science: {} ", this->player->getScience());
     int printed = fmt::format("o Gold: {} ", this->player->getGold()).size()
-            + fmt::format("Δ Science: {}", this->player->getScience()).size();
+            + fmt::format("Δ Science: {} ", this->player->getScience()).size();
     for (const auto& pair : this->player->getResources())
     {
         Resource key = pair.first;
         int value = pair.second;
 
-        fmt::print(fg(resource_fg.at(key)) | bg(COLOR4), "{} {}: {}", resource_icons.at(key), resource_names.at(key), value);
+        fmt::print(fg(resource_fg.at(key)) | bg(COLOR4), "{} {}: {} ", resource_icons.at(key), resource_names.at(key), value);
         printed += fmt::format("{} {}: {} ", resource_icons.at(key), resource_names.at(key), value).size();
     }
     fmt::print(bg(COLOR4), "{}\n", std::string(MAP_SIZE_X*3 + 1 - printed, ' '));
@@ -877,6 +877,87 @@ void Game::playerTurn() {
                 } while (choice != 0);
             } else {
                 fmt::print(fg(COLOR2) | bg(COLOR4), "Can't build on foreign territory\n");
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+        }
+        else if (action == "f") {
+            Tile* t = this->getSelectedTile();
+            if (t->getOwner() != nullptr && t->getUnit() == nullptr && (t->getBuilding() == nullptr || t->getBuilding()->getType() != BuildingType::City)) {
+                int choice = -1;
+                do {
+                    int counter = 1;
+                    for (Unit* u : this->player->getResearchedUnits()) {
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "{} | {}, cost: {} gold, damage: {}, hp: {}, movement points: {}, range: {}\n", counter, u->getName(), u->getCost(), u->getDamage(), u->getMaxHealth(), u->getMaxMovement(), u->getRange());
+                        counter++;
+                    }
+                    fmt::print(fg(COLOR2) | bg(COLOR4), "Enter number of unit you want to spawn (0 to leave this menu) >");
+
+                    std::cin >> choice;
+
+                    if (std::cin.fail()) {
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "Error: enter a number!\n");
+
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        choice = -1;
+                        std::this_thread::sleep_for(std::chrono::seconds(1));
+                        continue;
+                    }
+
+                    if (choice > 0 && choice <= this->player->getResearchedUnits().size()) {
+                        Unit* unit = this->player->getResearchedUnits()[choice-1];
+                        if (unit->getCost() > this->player->getGold()) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "You don't have enough gold!\n");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            continue;
+                        }
+
+                        bool hasAllResources = true;
+
+                        const auto& playerResources = this->getPlayer()->getResources();
+                        const auto& requiredResources = unit->getRequiredResources();
+
+                        for (const auto& [resource, requiredAmount] : requiredResources)
+                        {
+                            if (resource == Resource::Nothing)
+                                continue;
+
+                            auto it = playerResources.find(resource);
+
+                            if (it == playerResources.end() || it->second < requiredAmount)
+                            {
+                                hasAllResources = false;
+                                break;
+                            }
+                        }
+                        if (!hasAllResources) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "You don't have enough resources!\n");
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            continue;
+                        }
+
+                        if (unit->getRequiredBuilding() != nullptr && (t->getBuilding() == nullptr || t->getBuilding()->getName() != unit->getRequiredBuilding()->getName())) {
+                            fmt::print(fg(COLOR2) | bg(COLOR4), "You can't place it here, cause it needs to be placed at {}!\n", unit->getRequiredBuilding()->getName());
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            continue;
+                        }
+
+                        this->player->removeGold(unit->getCost());
+                        for (const auto& pair : unit->getRequiredResources())
+                        {
+                            Resource resource = pair.first;
+                            int value = pair.second;
+                            this->player->removeResource(resource, value);
+                        }
+
+                        new Unit(unit, selectedTileX, selectedTileY, this);
+                        fmt::print(fg(COLOR2) | bg(COLOR4), "Unit successfully spawned!");
+                        std::this_thread::sleep_for(std::chrono::seconds(1));
+                        choice = 0;
+                    }
+                } while (choice != 0);
+            } else {
+                fmt::print(fg(COLOR2) | bg(COLOR4), "Can't spawn units on foreign territory\n");
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             }
         }

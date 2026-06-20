@@ -318,7 +318,7 @@ static Building b_castle{
     {TerrainType::Plains, TerrainType::Forest, TerrainType::Desert}
 };
 
-static std::vector<Building> b_list{b_city, b_farm, b_granary, b_aqueduct, b_lumber, b_sawmill, b_mine, b_quarry, b_forge, b_workshop, b_factory, b_factory_d, b_market, b_trading, b_bank, b_stock, b_port, b_harbor, b_library, b_temple, b_university, b_observatory, b_lab, b_academy, b_barracks, b_armory, b_stable, b_watchtower, b_castle};
+static std::vector<Building> b_list{b_farm, b_granary, b_aqueduct, b_lumber, b_sawmill, b_mine, b_quarry, b_forge, b_workshop, b_factory, b_factory_d, b_market, b_trading, b_bank, b_stock, b_port, b_harbor, b_library, b_temple, b_university, b_observatory, b_lab, b_academy, b_barracks, b_armory, b_stable, b_watchtower, b_castle};
 
 static Unit u_warrior{"Warrior",-1,-1,100,10,2,1,UnitType::Melee,50,10,{{Resource::Nothing,0}},nullptr};
 static Unit u_spearman{"Spearman",-1,-1,110,12,2,1,UnitType::AntiCavalry,70,20,{{Resource::Iron,1}},nullptr};

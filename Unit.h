@@ -36,6 +36,7 @@ public:
     Unit(const Unit &unit);
 
     Unit(const Unit &unit, int x, int y, Game* game);
+    Unit(const Unit* unit, int x, int y, Game* game);
 
     std::string getName() const;
     int getX() const;
